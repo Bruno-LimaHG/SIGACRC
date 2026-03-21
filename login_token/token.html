@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Certificado Digital - ICP Brasil</title>
+    <link rel="stylesheet" href="token.css">
+</head>
+<body>
+
+    <!-- MESMO FUNDO -->
+    <div class="background"></div>
+
+    <div class="login-box">
+
+        <h1>Certificado Digital</h1>
+        <p>Conecte o token e aguarde o reconhecimento</p>
+
+        <!-- Ícone ou imagem do token (você pode trocar depois) -->
+        <div class="token-area">
+            <img src="../token.png" alt="Token ICP">
+            <span>Procurando dispositivo...</span>
+        </div>
+
+        <!-- Botões -->
+        <button class="login-btn">
+            Tentar novamente
+        </button>
+
+        <button class="back-btn" id="btnVoltar">
+            Voltar para login
+        </button>
+
+    </div>
+
+    <script>
+        function voltar(){
+            window.location.href = "login_escreventes.html";
+        }
+    </script>
+
+<script src="token.js"></script>
+
+</body>
+</html>
