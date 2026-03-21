@@ -71,3 +71,17 @@ body {
 .login-btn img {
     width: 70px;
 }
+
+.back-btn {
+    width: 100%;
+    background: #ddd;
+    border: none;
+    border-radius: 10px;
+    padding: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.back-btn:hover {
+    background: #cfcfcf;
+}

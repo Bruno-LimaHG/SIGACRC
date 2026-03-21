@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <link rel="stylesheet" href="login_clientes.css">
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- Imagem lateral (igual antes) -->
+    <div class="image"></div>
+
+    <!-- Caixa de login -->
+    <div class="login-box">
+      <h2>Login</h2>
+
+      <div class="input-group">
+        <input type="text" placeholder="Coloque seu email ou CPF">
+        <span>👤</span>
+      </div>
+
+      <div class="input-group">
+        <input type="password" id="senha" placeholder="Senha">
+        <span>🔒</span>
+      </div>
+
+      <button class="login-btn" onclick="login()">Entrar</button>
+
+      <!-- Link funcionário -->
+      <div class="funcionario-link">
+        <a href="#" onclick="irParaFuncionarios()">Sou funcionário</a>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="login_clientes.js"></script>
+</body>
+</html>
