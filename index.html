@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Buscar CEP</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <h1>🔎 Buscar CEP</h1>
+
+    <input type="text" id="cep" placeholder="Digite o CEP">
+    <button onclick="buscarCEP()">Buscar</button>
+
+    <div id="resultado"></div>
+
+    <script>
+        async function buscarCEP() {
+            const cep = document.getElementById("cep").value;
+            const resultado = document.getElementById("resultado");
+
+            resultado.innerHTML = "Buscando...";
+
+            try {
+                const response = await fetch(`http://localhost:3000/cep/${cep}`);
+                const data = await response.json();
+
+                if (data.erro) {
+                    resultado.innerHTML = "❌ CEP inválido ou não encontrado";
+                    return;
+                }
+
+                resultado.innerHTML = `
+                    <p><b>Rua:</b> ${data.logradouro}</p>
+                    <p><b>Bairro:</b> ${data.bairro}</p>
+                    <p><b>Cidade:</b> ${data.localidade}</p>
+                    <p><b>Estado:</b> ${data.uf}</p>
+                `;
+            } catch (error) {
+                resultado.innerHTML = "❌ Erro ao conectar com a API";
+            }
+        }
+    </script>
+
+</body>
+</html>
