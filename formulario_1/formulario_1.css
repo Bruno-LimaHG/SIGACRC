@@ -79,8 +79,12 @@
     padding: 14px;
     width: 100%;
     border: none;
-    border-radius: 25px;
+    border-radius: 10px;
     background: #8a9c78;
     font-size: 16px;
     cursor: pointer;
+    }
+
+    button:hover {
+    background: #849177;
     }
