@@ -1,58 +1,112 @@
+const resposta = await fetch(`/api/cep/${cepLimpo}`);
 document.addEventListener("DOMContentLoaded", function() {
 
-    // BOTÕES
-    document.getElementById("voltar").onclick = function() {
+    // BOTÃO VOLTAR
+    document.getElementById("voltar").onclick = function(e) {
+        e.preventDefault();
         window.location.href = "../formulario_1/formulario_1.html";
     };
 
-    document.getElementById("proximo").onclick = function() {
-        window.location.href = "../formulario_3/formulario_3.html";
-    };
+    // CAMPOS (Ajustados para o 2º Contraente - Mude isso no seu HTML!)
+    const cpf = document.querySelector('input[name="cpf_contraente2"]');
+    const rg = document.querySelector('input[name="rg_contraente2"]');
+    const celular = document.querySelector('input[name="celular_contraente2"]');
+    const cep = document.querySelector('input[name="cep_contraente2"]');
 
-    // CAMPOS
-    const cpf = document.querySelector('input[name="cpf_contraente1"]');
-    const rg = document.querySelector('input[name="rg_contraente1"]');
-    const celular = document.querySelector('input[name="celular_contraente1"]');
-    const cep = document.querySelector('input[name="cep_contraente1"]');
+    // Campos de endereço para preenchimento automático
+    const inputLogradouro = document.querySelector('input[name="logradouro_contraente2"]');
+    const inputBairro = document.querySelector('input[name="bairro_contraente2"]');
+    const inputCidade = document.querySelector('input[name="cidade_contraente2"]');
+    
+    const btnProximo = document.getElementById("proximo");
 
-    // CPF: 000.000.000-00
-    cpf.addEventListener("input", function(e) {
-        let value = e.target.value.replace(/\D/g, '').slice(0, 11);
+    // Trava de segurança do formulário
+    let cepPermitidoParaAvancar = false;
 
-        value = value.replace(/(\d{3})(\d)/, '$1.$2');
-        value = value.replace(/(\d{3})(\d)/, '$1.$2');
-        value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+    // MÁSCARAS (Mantidas iguais, pois a lógica de string está correta)
+    if (cpf) {
+        cpf.addEventListener("input", function(e) {
+            let value = e.target.value.replace(/\D/g, '').slice(0, 11);
+            value = value.replace(/(\d{3})(\d)/, '$1.$2');
+            value = value.replace(/(\d{3})(\d)/, '$1.$2');
+            value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+            e.target.value = value;
+        });
+    }
 
-        e.target.value = value;
-    });
+    if (rg) {
+        rg.addEventListener("input", function(e) {
+            let value = e.target.value.replace(/\D/g, '').slice(0, 9);
+            value = value.replace(/(\d{2})(\d)/, '$1.$2');
+            value = value.replace(/(\d{3})(\d)/, '$1.$2');
+            value = value.replace(/(\d{3})(\d{1})$/, '$1-$2');
+            e.target.value = value;
+        });
+    }
 
-    // RG: 00.000.000-0
-    rg.addEventListener("input", function(e) {
-        let value = e.target.value.replace(/\D/g, '').slice(0, 9);
+    if (celular) {
+        celular.addEventListener("input", function(e) {
+            let value = e.target.value.replace(/\D/g, '').slice(0, 11);
+            value = value.replace(/^(\d{2})(\d)/g, '($1) $2');
+            value = value.replace(/(\d{5})(\d)/, '$1-$2');
+            e.target.value = value;
+        });
+    }
 
-        value = value.replace(/(\d{2})(\d)/, '$1.$2');
-        value = value.replace(/(\d{3})(\d)/, '$1.$2');
-        value = value.replace(/(\d{3})(\d{1})$/, '$1-$2');
+    if (cep) {
+        cep.addEventListener("input", function(e) {
+            let value = e.target.value.replace(/\D/g, '').slice(0, 8);
+            value = value.replace(/(\d{5})(\d)/, '$1-$2');
+            e.target.value = value;
+        });
 
-        e.target.value = value;
-    });
+        // INTEGRAÇÃO COM A API (A mesma regra do form 1)
+        cep.addEventListener("blur", async function(e) {
+            const cepLimpo = e.target.value.replace(/\D/g, ''); 
 
-    // CELULAR: (00) 00000-0000
-    celular.addEventListener("input", function(e) {
-        let value = e.target.value.replace(/\D/g, '').slice(0, 11);
+            if(cepLimpo.length !== 8) return; 
 
-        value = value.replace(/^(\d{2})(\d)/g, '($1) $2');
-        value = value.replace(/(\d{5})(\d)/, '$1-$2')
-        e.target.value = value;
-    });
+            try {
+                const resposta = await fetch(`http://localhost:3000/cep/${cepLimpo}`);
+                const dados = await resposta.json();
 
-    // CEP: 00000-000
-    cep.addEventListener("input", function(e) {
-        let value = e.target.value.replace(/\D/g, '').slice(0, 8);
+                if (!resposta.ok) {
+                    alert(`Erro: ${dados.erro}`); 
+                    
+                    if(inputLogradouro) inputLogradouro.value = "";
+                    if(inputBairro) inputBairro.value = "";
+                    if(inputCidade) inputCidade.value = "";
+                    
+                    cepPermitidoParaAvancar = false;
+                    return;
+                }
 
-        value = value.replace(/(\d{5})(\d)/, '$1-$2');
+                if(inputLogradouro) inputLogradouro.value = dados.logradouro;
+                if(inputBairro) inputBairro.value = dados.bairro;
+                if(inputCidade) inputCidade.value = dados.localidade;
+                
+                cepPermitidoParaAvancar = true;
 
-        e.target.value = value;
-    });
+            } catch (erro) {
+                alert("Erro ao conectar com a API do cartório. O servidor Node está rodando?");
+                cepPermitidoParaAvancar = false;
+            }
+        });
+    }
+
+    // VALIDAÇÃO DO BOTÃO PRÓXIMO
+    if (btnProximo) {
+        btnProximo.onclick = function(e) {
+            e.preventDefault(); 
+            
+            // Impede o avanço se o CEP não for validado pela API
+            if (!cepPermitidoParaAvancar) {
+                alert("Atenção: O endereço do 2º contraente precisa estar dentro da área de jurisdição permitida ou o CEP é inválido.");
+                return; 
+            }
+
+            window.location.href = "../formulario_3/formulario_3.html";
+        };
+    }
 
 });
