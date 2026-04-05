@@ -64,7 +64,7 @@ inputCep.addEventListener("blur", async function(e) {
 
     try {
         // AQUI ESTÁ A CORREÇÃO NO LUGAR CERTO, USANDO CRASE (`) E O CAMINHO RELATIVO
-        const resposta = await fetch(`/api/cep/${cepLimpo}`);
+        const resposta = await fetch(`http://localhost:3000/cep/${cepLimpo}`);
         const dados = await resposta.json();
 
         if (!resposta.ok) {

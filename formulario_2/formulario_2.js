@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
             try {
                 // Rota relativa corrigida e usando crases
-                const resposta = await fetch(`/api/cep/${cepLimpo}`);
+                const resposta = await fetch(`http://localhost:3000/cep/${cepLimpo}`);
                 const dados = await resposta.json();
 
                 if (!resposta.ok) {

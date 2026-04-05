@@ -2,6 +2,10 @@ function irParaFuncionarios() {
   window.location.href = "../login_escreventes/login_escreventes.html";
 }
 
+function irParaCadastro() {
+  window.location.href = "../cadastro_clientes/cadastro_clientes.html";
+}
+
 function login() {
   const senha = document.getElementById("senha").value;
 
