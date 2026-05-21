@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário de Casamento</title>
+    <!-- Linka o CSS principal do formulário -->
+    <link rel="stylesheet" href="css/formulario.css">
+</head>
+<body>
+
+<!-- Container geral da página -->
+<div class="pagina">
+    <main class="form-box">
+
+                <!-- Cabeçalho com título e botão de contraste -->
+        <header class="topo">
+            <div>
+                <span class="tag">SIGACRC</span>
+                <h1>Formulário de Casamento</h1>
+                <p>Preencha os dados por etapas, sem abrir outra aba.</p>
+            </div>
+
+            <button type="button" id="btnContraste" class="btn-contraste">
+                Alto contraste
+            </button>
+        </header>
+
+                <!-- Mostra o progresso das etapas do formulário -->
+        <div class="progresso-area">
+            <div class="progresso-info">
+                <span id="textoEtapa">Etapa 1 de 8</span>
+                <span id="porcentagem">12%</span>
+            </div>
+
+            <div class="barra">
+                <div id="barraProgresso"></div>
+            </div>
+        </div>
+
+                <!-- Formulário principal que recebe as etapas carregadas pelo JS -->
+        <form id="formCasamento">
+
+            <!-- Aqui o JavaScript carrega os arquivos da pasta etapas -->
+            <!-- Área onde cada arquivo de etapa será carregado pelo formulario.js -->
+            <section id="conteudoEtapa"></section>
+
+                        <!-- Botões de navegação entre as etapas -->
+            <div class="botoes">
+                <button type="button" id="btnAnterior" class="btn-secundario">Anterior</button>
+                <button type="button" id="btnProximo">Próximo</button>
+                <button type="submit" id="btnFinalizar" class="oculto">Finalizar</button>
+            </div>
+
+        </form>
+
+    </main>
+</div>
+
+<!-- Linka o JavaScript principal do formulário -->
+<script src="js/formulario.js"></script>
+</body>
+</html>

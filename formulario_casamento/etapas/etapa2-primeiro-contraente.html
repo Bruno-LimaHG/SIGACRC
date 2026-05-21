@@ -1,0 +1,131 @@
+<!-- Bloco com os dados do primeiro contraente -->
+<h2>1º Contraente</h2>
+<p class="descricao">Dados pessoais e endereço do primeiro contraente.</p>
+
+<!-- Campos pessoais do primeiro contraente -->
+<div class="grid">
+    <div class="campo campo-grande">
+        <label for="nome_contraente1">Nome completo</label>
+        <input type="text" id="nome_contraente1" name="nome_contraente1">
+    </div>
+
+    <div class="campo">
+        <label for="nascimento_contraente1">Data de nascimento</label>
+        <input type="date" id="nascimento_contraente1" name="nascimento_contraente1" data-calcula-idade="idade_contraente1">
+    </div>
+
+    <div class="campo">
+        <label for="idade_contraente1">Idade</label>
+        <input type="number" id="idade_contraente1" name="idade_contraente1" readonly>
+    </div>
+
+    <div class="campo">
+        <label for="estado_civil_contraente1">Estado civil</label>
+        <select id="estado_civil_contraente1" name="estado_civil_contraente1" data-condicional="casamento_anterior1">
+            <option value="">Selecione</option>
+            <option>Solteiro(a)</option>
+            <option>Divorciado(a)</option>
+            <option>Viúvo(a)</option>
+        </select>
+    </div>
+
+    <div class="campo">
+        <label for="nacionalidade_contraente1">Nacionalidade</label>
+        <input type="text" id="nacionalidade_contraente1" name="nacionalidade_contraente1" placeholder="Ex: Brasileiro(a)">
+    </div>
+
+    <div class="campo">
+        <label for="naturalidade_contraente1">Naturalidade</label>
+        <input type="text" id="naturalidade_contraente1" name="naturalidade_contraente1" placeholder="Cidade/UF">
+    </div>
+
+    <div class="campo">
+        <label for="profissao_contraente1">Profissão</label>
+        <input type="text" id="profissao_contraente1" name="profissao_contraente1">
+    </div>
+
+    <div class="campo">
+        <label for="cpf_contraente1">CPF</label>
+        <input type="text" id="cpf_contraente1" name="cpf_contraente1" class="cpf" maxlength="14">
+    </div>
+
+    <div class="campo">
+        <label for="rg_contraente1">RG</label>
+        <input type="text" id="rg_contraente1" name="rg_contraente1" class="rg" maxlength="12">
+    </div>
+
+    <div class="campo">
+        <label for="email_contraente1">E-mail</label>
+        <input type="email" id="email_contraente1" name="email_contraente1">
+    </div>
+
+    <div class="campo">
+        <label for="celular_contraente1">Celular</label>
+        <input type="tel" id="celular_contraente1" name="celular_contraente1" class="celular" maxlength="15">
+    </div>
+</div>
+
+<!-- Campos extras para divorciado ou viúvo -->
+<div id="casamento_anterior1" class="box-condicional oculto">
+    <h3>Informações sobre casamento anterior</h3>
+
+    <div class="grid">
+        <div class="campo">
+            <label for="bens_anteriores1">Houve bens do casamento anterior?</label>
+            <select id="bens_anteriores1" name="bens_anteriores1">
+                <option value="">Selecione</option>
+                <option>Sim</option>
+                <option>Não</option>
+            </select>
+        </div>
+
+        <div class="campo">
+            <label for="partilha1">Foi feita partilha/inventário?</label>
+            <select id="partilha1" name="partilha1">
+                <option value="">Selecione</option>
+                <option>Sim</option>
+                <option>Não</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<!-- Endereço do primeiro contraente -->
+<h3>Endereço</h3>
+
+<div class="grid">
+    <div class="campo">
+        <label for="cep_contraente1">CEP</label>
+        <input type="text" id="cep_contraente1" name="cep_contraente1" class="cep" maxlength="9">
+    </div>
+
+    <div class="campo campo-grande">
+        <label for="logradouro_contraente1">Logradouro</label>
+        <input type="text" id="logradouro_contraente1" name="logradouro_contraente1">
+    </div>
+
+    <div class="campo">
+        <label for="numero_contraente1">Número</label>
+        <input type="text" id="numero_contraente1" name="numero_contraente1">
+    </div>
+
+    <div class="campo">
+        <label for="complemento_contraente1">Complemento</label>
+        <input type="text" id="complemento_contraente1" name="complemento_contraente1">
+    </div>
+
+    <div class="campo">
+        <label for="bairro_contraente1">Bairro</label>
+        <input type="text" id="bairro_contraente1" name="bairro_contraente1">
+    </div>
+
+    <div class="campo">
+        <label for="cidade_contraente1">Cidade</label>
+        <input type="text" id="cidade_contraente1" name="cidade_contraente1">
+    </div>
+
+    <div class="campo">
+        <label for="uf_contraente1">UF</label>
+        <input type="text" id="uf_contraente1" name="uf_contraente1" maxlength="2">
+    </div>
+</div>
