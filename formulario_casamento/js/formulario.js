@@ -1,17 +1,3 @@
-/*
-    FORMULÁRIO DE CASAMENTO - VERSÃO MODULAR
-
-    Estrutura:
-    - index.html: página principal
-    - etapas/etapa1.html até etapas/etapa8.html: conteúdo de cada etapa
-    - css/formulario.css: estilo único
-    - js/formulario.js: lógica única
-
-    Importante:
-    Para carregar os arquivos da pasta etapas, use o Live Server do VS Code
-    ou outro servidor local. Abrir direto pelo file:// pode bloquear o fetch.
-*/
-
 // Linka cada arquivo de etapa com o formulario.js
 const etapas = [
     "etapas/etapa1-dados-casamento.html", // Carrega a etapa 1: dados do casamento
@@ -26,6 +12,7 @@ const etapas = [
 
 // Busca no HTML a área onde a etapa será exibida
 const conteudoEtapa = document.getElementById("conteudoEtapa");
+
 // Busca os botões de navegação do formulário
 const btnAnterior = document.getElementById("btnAnterior");
 const btnProximo = document.getElementById("btnProximo");
@@ -38,10 +25,10 @@ const form = document.getElementById("formCasamento");
 
 // Guarda qual etapa está sendo exibida no momento
 let etapaAtual = 0;
+
 // Guarda os dados preenchidos ao avançar e voltar
 let dadosFormulario = {};
 
-/* Carrega a etapa atual dentro do index.html */
 // Carrega o HTML da etapa atual dentro do formulário
 async function carregarEtapa() {
     salvarDadosDaEtapaAtual();
@@ -65,7 +52,6 @@ async function carregarEtapa() {
     });
 }
 
-/* Atualiza texto, porcentagem, barra e botões */
 // Atualiza barra, porcentagem e botões conforme a etapa
 function atualizarProgresso() {
     const total = etapas.length;
@@ -80,7 +66,6 @@ function atualizarProgresso() {
     btnFinalizar.classList.toggle("oculto", etapaAtual !== total - 1);
 }
 
-/* Guarda os dados preenchidos antes de mudar de etapa */
 // Salva os campos preenchidos antes de trocar de etapa
 function salvarDadosDaEtapaAtual() {
     const campos = conteudoEtapa.querySelectorAll("input, select, textarea");
@@ -89,16 +74,13 @@ function salvarDadosDaEtapaAtual() {
         if (campo.type === "checkbox") {
             dadosFormulario[campo.name] = campo.checked;
         } else if (campo.type === "file") {
-            if (campo.files.length > 0) {
-                dadosFormulario[campo.name] = campo.files[0].name;
-            }
+            return;
         } else {
             dadosFormulario[campo.name] = campo.value;
         }
     });
 }
 
-/* Recoloca os dados quando o usuário volta para uma etapa */
 // Recoloca os dados salvos quando o usuário volta para uma etapa
 function preencherCamposDaEtapa() {
     const campos = conteudoEtapa.querySelectorAll("input, select, textarea");
@@ -118,14 +100,12 @@ function preencherCamposDaEtapa() {
     });
 }
 
-/* Eventos dos botões principais */
 // Avança para a próxima etapa
 btnProximo.addEventListener("click", () => {
     if (validarEtapaAtual()) {
         salvarDadosDaEtapaAtual();
         etapaAtual++;
-        // Inicia o formulário carregando a primeira etapa
-carregarEtapa();
+        carregarEtapa();
     }
 });
 
@@ -150,22 +130,24 @@ form.addEventListener("submit", (event) => {
     salvarDadosDaEtapaAtual();
     gerarResumo();
 
-    alert("Formulário finalizado no navegador. Depois podemos integrar com banco de dados, impressão ou envio.");
+    alert("Formulário finalizado");
 });
 
-/* Tema alto contraste */
 // Alterna entre tema normal e alto contraste
 btnContraste.addEventListener("click", () => {
     document.body.classList.toggle("alto-contraste");
 
     const contrasteAtivo = document.body.classList.contains("alto-contraste");
-    btnContraste.textContent = contrasteAtivo ? "Tema normal" : "Alto contraste";
+
+    btnContraste.setAttribute(
+        "aria-label",
+        contrasteAtivo ? "Ativar tema normal" : "Ativar alto contraste"
+    );
 
     localStorage.setItem("altoContraste", contrasteAtivo ? "sim" : "nao");
 });
 
-/* Configura máscaras e campos condicionais sempre que uma etapa é carregada */
-// Ativa máscaras, idade automática e campos condicionais da etapa
+// Ativa máscaras, idade automática, campos condicionais e anexos da etapa
 function configurarEventosDaEtapa() {
     configurarMascaras();
     configurarCalculoDeIdade();
@@ -173,7 +155,6 @@ function configurarEventosDaEtapa() {
     configurarAnexosDocumentos();
 }
 
-/* Validação simples */
 // Verifica campos obrigatórios da etapa atual
 function validarEtapaAtual() {
     limparErros();
@@ -208,7 +189,6 @@ function limparErros() {
     conteudoEtapa.querySelectorAll(".mensagem-erro").forEach((erro) => erro.remove());
 }
 
-/* Máscaras */
 // Aplica máscaras nos campos da etapa carregada
 function configurarMascaras() {
     conteudoEtapa.querySelectorAll(".cpf").forEach((campo) => {
@@ -273,7 +253,6 @@ function mascaraCEP(valor) {
         .slice(0, 9);
 }
 
-/* Cálculo automático de idade */
 // Calcula a idade pela data de nascimento
 function configurarCalculoDeIdade() {
     conteudoEtapa.querySelectorAll("[data-calcula-idade]").forEach((campoData) => {
@@ -305,7 +284,6 @@ function calcularIdade(dataNascimento) {
     return idade;
 }
 
-/* Campos que aparecem somente em alguns casos */
 // Configura campos que aparecem apenas em certas respostas
 function configurarCamposCondicionais() {
     conteudoEtapa.querySelectorAll("[data-condicional]").forEach((select) => {
@@ -357,51 +335,90 @@ function controlarCondicionalFalecido(select) {
     }
 }
 
-
-/* Marca automaticamente o checklist quando um documento é anexado */
+// Marca, visualiza e remove documentos anexados
 function configurarAnexosDocumentos() {
     conteudoEtapa.querySelectorAll(".arquivo-documento").forEach((inputArquivo) => {
-        inputArquivo.addEventListener("change", () => {
-            const checkId = inputArquivo.dataset.check;
-            const checkbox = document.getElementById(checkId);
-            const botaoAnexo = inputArquivo.closest(".btn-anexo");
+        const checkId = inputArquivo.dataset.check;
+        const checkbox = document.getElementById(checkId);
+        const itemDocumento = inputArquivo.closest(".item-documento");
+        const botaoAnexo = inputArquivo.closest(".btn-anexo");
+        const infoArquivo = itemDocumento.querySelector(`[data-info="${inputArquivo.name}"]`);
+        const nomeArquivo = infoArquivo.querySelector(".nome-arquivo");
+        const btnVer = infoArquivo.querySelector(".btn-ver-arquivo");
+        const btnRemover = infoArquivo.querySelector(".btn-remover-arquivo");
 
-            if (!checkbox || !botaoAnexo) {
+        atualizarVisualArquivo();
+
+        inputArquivo.addEventListener("change", () => {
+            if (!checkbox || !botaoAnexo || !infoArquivo) {
                 return;
             }
 
             if (inputArquivo.files.length > 0) {
-                checkbox.checked = true;
+                const arquivo = inputArquivo.files[0];
+
+                if (dadosFormulario[inputArquivo.name]?.url) {
+                    URL.revokeObjectURL(dadosFormulario[inputArquivo.name].url);
+                }
+
+                dadosFormulario[inputArquivo.name] = {
+                    nome: arquivo.name,
+                    url: URL.createObjectURL(arquivo)
+                };
+
                 dadosFormulario[checkbox.name] = true;
-                dadosFormulario[inputArquivo.name] = inputArquivo.files[0].name;
-                botaoAnexo.childNodes[0].textContent = "Arquivo anexado";
-            } else {
-                checkbox.checked = false;
-                dadosFormulario[checkbox.name] = false;
-                dadosFormulario[inputArquivo.name] = "";
-                botaoAnexo.childNodes[0].textContent = "Anexar documento";
+
+                atualizarVisualArquivo();
             }
         });
 
-        const nomeArquivoSalvo = dadosFormulario[inputArquivo.name];
+        btnVer.addEventListener("click", () => {
+            const arquivoSalvo = dadosFormulario[inputArquivo.name];
 
-        if (nomeArquivoSalvo) {
-            const checkId = inputArquivo.dataset.check;
-            const checkbox = document.getElementById(checkId);
-            const botaoAnexo = inputArquivo.closest(".btn-anexo");
-
-            if (checkbox) {
-                checkbox.checked = true;
+            if (!arquivoSalvo || !arquivoSalvo.url) {
+                alert("Nenhum arquivo foi anexado.");
+                return;
             }
 
-            if (botaoAnexo) {
-                botaoAnexo.childNodes[0].textContent = "Arquivo anexado";
+            window.open(arquivoSalvo.url, "_blank");
+        });
+
+        btnRemover.addEventListener("click", () => {
+            const arquivoSalvo = dadosFormulario[inputArquivo.name];
+
+            if (arquivoSalvo?.url) {
+                URL.revokeObjectURL(arquivoSalvo.url);
+            }
+
+            delete dadosFormulario[inputArquivo.name];
+
+            if (checkbox) {
+                checkbox.checked = false;
+                dadosFormulario[checkbox.name] = false;
+            }
+
+            inputArquivo.value = "";
+            atualizarVisualArquivo();
+        });
+
+        function atualizarVisualArquivo() {
+            const arquivoSalvo = dadosFormulario[inputArquivo.name];
+
+            if (arquivoSalvo && arquivoSalvo.nome) {
+                checkbox.checked = true;
+                nomeArquivo.textContent = arquivoSalvo.nome;
+                infoArquivo.classList.remove("oculto");
+                botaoAnexo.childNodes[0].textContent = "Trocar arquivo";
+            } else {
+                checkbox.checked = false;
+                nomeArquivo.textContent = "";
+                infoArquivo.classList.add("oculto");
+                botaoAnexo.childNodes[0].textContent = "Anexar documento";
             }
         }
     });
 }
 
-/* Resumo final */
 // Monta o resumo final com os principais dados preenchidos
 function gerarResumo() {
     const resumo = document.getElementById("resumo");
@@ -424,11 +441,11 @@ function gerarResumo() {
     `;
 }
 
-/* Início */
 // Recupera a preferência de alto contraste salva no navegador
 if (localStorage.getItem("altoContraste") === "sim") {
     document.body.classList.add("alto-contraste");
-    btnContraste.textContent = "Tema normal";
+    btnContraste.setAttribute("aria-label", "Ativar tema normal");
 }
 
+// Inicia o formulário carregando a primeira etapa
 carregarEtapa();

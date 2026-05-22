@@ -2,7 +2,7 @@
 <h2>Documentos e revisão</h2>
 <p class="descricao">Anexe os documentos necessários antes de finalizar.</p>
 
-<!-- Lista de documentos com anexos obrigatórios -->
+<!-- Lista de documentos com anexos -->
 <div class="checklist checklist-anexos">
 
     <!-- Documento: certidões atualizadas -->
@@ -12,10 +12,22 @@
             <label for="doc_certidoes">Certidões atualizadas</label>
         </div>
 
-        <label class="btn-anexo">
-            Anexar documento
-            <input type="file" name="arquivo_certidoes" class="arquivo-documento" data-check="doc_certidoes">
-        </label>
+        <div class="area-anexo">
+            <label class="btn-anexo">
+                Anexar documento
+                <input type="file" name="arquivo_certidoes" class="arquivo-documento" data-check="doc_certidoes">
+            </label>
+
+            <!-- Mostra o arquivo anexado e as ações disponíveis -->
+            <div class="arquivo-info oculto" data-info="arquivo_certidoes">
+                <span class="nome-arquivo"></span>
+
+                <div class="acoes-arquivo">
+                    <button type="button" class="btn-ver-arquivo">Ver</button>
+                    <button type="button" class="btn-remover-arquivo">Remover</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Documento: RG, CPF ou CNH dos noivos -->
@@ -25,10 +37,22 @@
             <label for="doc_rg_noivos">RG, CPF ou CNH dos noivos</label>
         </div>
 
-        <label class="btn-anexo">
-            Anexar documento
-            <input type="file" name="arquivo_rg_noivos" class="arquivo-documento" data-check="doc_rg_noivos">
-        </label>
+        <div class="area-anexo">
+            <label class="btn-anexo">
+                Anexar documento
+                <input type="file" name="arquivo_rg_noivos" class="arquivo-documento" data-check="doc_rg_noivos">
+            </label>
+
+            <!-- Mostra o arquivo anexado e as ações disponíveis -->
+            <div class="arquivo-info oculto" data-info="arquivo_rg_noivos">
+                <span class="nome-arquivo"></span>
+
+                <div class="acoes-arquivo">
+                    <button type="button" class="btn-ver-arquivo">Ver</button>
+                    <button type="button" class="btn-remover-arquivo">Remover</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Documento: RG ou CNH das testemunhas -->
@@ -38,10 +62,22 @@
             <label for="doc_rg_testemunhas">RG ou CNH das duas testemunhas</label>
         </div>
 
-        <label class="btn-anexo">
-            Anexar documento
-            <input type="file" name="arquivo_rg_testemunhas" class="arquivo-documento" data-check="doc_rg_testemunhas">
-        </label>
+        <div class="area-anexo">
+            <label class="btn-anexo">
+                Anexar documento
+                <input type="file" name="arquivo_rg_testemunhas" class="arquivo-documento" data-check="doc_rg_testemunhas">
+            </label>
+
+            <!-- Mostra o arquivo anexado e as ações disponíveis -->
+            <div class="arquivo-info oculto" data-info="arquivo_rg_testemunhas">
+                <span class="nome-arquivo"></span>
+
+                <div class="acoes-arquivo">
+                    <button type="button" class="btn-ver-arquivo">Ver</button>
+                    <button type="button" class="btn-remover-arquivo">Remover</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Documento: comprovante de residência -->
@@ -51,10 +87,22 @@
             <label for="doc_residencia">Comprovante de residência</label>
         </div>
 
-        <label class="btn-anexo">
-            Anexar documento
-            <input type="file" name="arquivo_residencia" class="arquivo-documento" data-check="doc_residencia">
-        </label>
+        <div class="area-anexo">
+            <label class="btn-anexo">
+                Anexar documento
+                <input type="file" name="arquivo_residencia" class="arquivo-documento" data-check="doc_residencia">
+            </label>
+
+            <!-- Mostra o arquivo anexado e as ações disponíveis -->
+            <div class="arquivo-info oculto" data-info="arquivo_residencia">
+                <span class="nome-arquivo"></span>
+
+                <div class="acoes-arquivo">
+                    <button type="button" class="btn-ver-arquivo">Ver</button>
+                    <button type="button" class="btn-remover-arquivo">Remover</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Documento: pacto antenupcial -->
@@ -64,10 +112,22 @@
             <label for="doc_pacto">Pacto antenupcial, se houver</label>
         </div>
 
-        <label class="btn-anexo">
-            Anexar documento
-            <input type="file" name="arquivo_pacto" class="arquivo-documento" data-check="doc_pacto">
-        </label>
+        <div class="area-anexo">
+            <label class="btn-anexo">
+                Anexar documento
+                <input type="file" name="arquivo_pacto" class="arquivo-documento" data-check="doc_pacto">
+            </label>
+
+            <!-- Mostra o arquivo anexado e as ações disponíveis -->
+            <div class="arquivo-info oculto" data-info="arquivo_pacto">
+                <span class="nome-arquivo"></span>
+
+                <div class="acoes-arquivo">
+                    <button type="button" class="btn-ver-arquivo">Ver</button>
+                    <button type="button" class="btn-remover-arquivo">Remover</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Documento: requerimento religioso -->
@@ -77,10 +137,22 @@
             <label for="doc_religioso">Requerimento do casamento religioso com efeito civil, se houver</label>
         </div>
 
-        <label class="btn-anexo">
-            Anexar documento
-            <input type="file" name="arquivo_religioso" class="arquivo-documento" data-check="doc_religioso">
-        </label>
+        <div class="area-anexo">
+            <label class="btn-anexo">
+                Anexar documento
+                <input type="file" name="arquivo_religioso" class="arquivo-documento" data-check="doc_religioso">
+            </label>
+
+            <!-- Mostra o arquivo anexado e as ações disponíveis -->
+            <div class="arquivo-info oculto" data-info="arquivo_religioso">
+                <span class="nome-arquivo"></span>
+
+                <div class="acoes-arquivo">
+                    <button type="button" class="btn-ver-arquivo">Ver</button>
+                    <button type="button" class="btn-remover-arquivo">Remover</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

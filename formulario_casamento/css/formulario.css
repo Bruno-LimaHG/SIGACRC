@@ -28,14 +28,14 @@ body.alto-contraste {
     --card: #111111;
     --texto: #ffffff;
     --texto-suave: #ffffff;
-    --principal: #ffff00;
-    --principal-hover: #ffe600;
+    --principal: #b7ff4a;
+    --principal-hover: #9ee63a;
     --borda: #ffffff;
     --campo: #000000;
     --aviso: #1f1f1f;
     --sombra: rgba(255, 255, 255, 0.18);
-    --botao-anexo-bg: #ffff00;
-    --botao-anexo-hover: #ffe600;
+    --botao-anexo-bg: #b7ff4a;
+    --botao-anexo-hover: #9ee63a;
     --botao-anexo-texto: #000000;
 }
 
@@ -456,4 +456,162 @@ body.alto-contraste .btn-anexo {
 .checklist .item-documento .btn-anexo {
     background: var(--botao-anexo-bg);
     color: var(--botao-anexo-texto);
+}
+
+/* Ajusta o botão de tema para exibir somente o ícone */
+.btn-tema {
+    width: 56px;
+    height: 56px;
+    padding: 0;
+    border-radius: 12px;
+    border: 1px solid var(--borda);
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Remove efeitos exagerados do botão de tema */
+.btn-tema:hover {
+    background: #f2f2f2;
+    transform: none;
+}
+
+/* Define o tamanho do ícone dentro do botão */
+.btn-tema img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    display: block;
+}
+
+/* Tema claro: mantém o ícone original visível */
+body:not(.alto-contraste) .btn-tema img {
+    filter: none;
+}
+
+/* Alto contraste: botão escuro com borda branca */
+body.alto-contraste .btn-tema {
+    background: #111111;
+    border: 1px solid #ffffff;
+}
+
+/* Alto contraste: transforma o ícone em branco */
+body.alto-contraste .btn-tema img {
+    filter: invert(1);
+}
+
+/* Alto contraste: mantém o hover visível */
+body.alto-contraste .btn-tema:hover {
+    background: #222222;
+}
+
+/* Organiza a área do botão de anexo e das ações do arquivo */
+.area-anexo {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* Mostra o nome do arquivo anexado */
+.arquivo-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* Estiliza o nome do arquivo anexado */
+.nome-arquivo {
+    max-width: 220px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    background: var(--aviso);
+    color: var(--texto);
+    border: 1px solid var(--borda);
+    font-size: 13px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* Organiza os botões de ver e remover arquivo */
+.acoes-arquivo {
+    display: flex;
+    gap: 8px;
+}
+
+/* Botões menores usados nos arquivos anexados */
+.btn-ver-arquivo,
+.btn-remover-arquivo {
+    width: auto;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+}
+
+/* Botão para visualizar arquivo */
+.btn-ver-arquivo {
+    background: var(--botao-anexo-bg);
+    color: var(--botao-anexo-texto);
+    border: 1px solid var(--botao-anexo-bg);
+}
+
+/* Botão para remover arquivo */
+.btn-remover-arquivo {
+    background: transparent;
+    color: var(--texto);
+    border: 1px solid var(--borda);
+}
+
+/* Hover do botão visualizar */
+.btn-ver-arquivo:hover {
+    background: var(--botao-anexo-hover);
+    color: var(--botao-anexo-texto);
+}
+
+/* Hover do botão remover */
+.btn-remover-arquivo:hover {
+    background: var(--aviso);
+    color: var(--texto);
+}
+
+/* Mantém os botões legíveis no alto contraste */
+body.alto-contraste .btn-ver-arquivo {
+    color: #000000;
+}
+
+body.alto-contraste .btn-remover-arquivo {
+    color: #ffffff;
+    border: 1px solid #ffffff;
+}
+
+/* Ajusta os anexos em telas pequenas */
+@media (max-width: 760px) {
+    .area-anexo {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .arquivo-info {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .nome-arquivo {
+        max-width: 100%;
+    }
+
+    .acoes-arquivo {
+        width: 100%;
+    }
+
+    .btn-ver-arquivo,
+    .btn-remover-arquivo {
+        width: 100%;
+    }
 }
