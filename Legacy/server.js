@@ -6,22 +6,6 @@ const app = express();
 const PORT = 3000;
 
 app.use(cors());
-<<<<<<< HEAD
-app.use(express.static(__dirname)); // serve HTML, CSS e JS
-
-// rota raiz
-app.get("/", (req, res) => {
-    res.sendFile(__dirname + "/index.html");
-});
-
-// rota da API
-app.get("/cep/:cep", async (req, res) => {
-    const { cep } = req.params;
-
-    if (!/^\d{8}$/.test(cep)) {
-        return res.status(400).json({
-            erro: "CEP inválido"
-=======
 
 // 🔥 LISTA DOS BAIRROS PERMITIDOS (os da imagem)
 const bairrosPermitidos = [
@@ -86,7 +70,6 @@ app.get("/cep/:cep", async (req, res) => {
     if (!/^\d{8}$/.test(cep)) {
         return res.status(400).json({
             erro: "CEP inválido. Use 8 números."
->>>>>>> b8442c7e178eb545f3f0f288177468f599545b2c
         });
     }
 
@@ -99,24 +82,6 @@ app.get("/cep/:cep", async (req, res) => {
             });
         }
 
-<<<<<<< HEAD
-        const cidade = response.data.localidade || "";
-        const uf = response.data.uf || "";
-
-        if (cidade.toUpperCase() !== "OSASCO" || uf.toUpperCase() !== "SP") {
-            return res.status(403).json({
-                erro: "CEP fora do município de Osasco"
-            });
-        }
-
-        res.json(response.data);
-
-    } catch (error) {
-        console.error(error.message);
-
-        res.status(500).json({
-            erro: "Erro ao se comunicar com a API"
-=======
         // 👇 pega o bairro retornado pelo ViaCEP
         const bairro = response.data.bairro
             .toUpperCase()
@@ -142,15 +107,10 @@ app.get("/cep/:cep", async (req, res) => {
     } catch (error) {
         res.status(500).json({
             erro: "Erro ao buscar CEP"
->>>>>>> b8442c7e178eb545f3f0f288177468f599545b2c
         });
     }
 });
 
 app.listen(PORT, () => {
-<<<<<<< HEAD
-    console.log(`API rodando em http://localhost:${PORT}`);
-=======
     console.log(`🚀 API rodando em http://localhost:${PORT}`);
->>>>>>> b8442c7e178eb545f3f0f288177468f599545b2c
 });

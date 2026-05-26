@@ -1,15 +1,8 @@
 {
-<<<<<<< HEAD
-  "name": "api_via_cep",
-  "version": "1.0.0",
-  "description": "",
-  "main": "script.js",
-=======
   "name": "apicep",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
->>>>>>> b8442c7e178eb545f3f0f288177468f599545b2c
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
@@ -19,11 +12,7 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-<<<<<<< HEAD
-    "axios": "^1.16.1",
-=======
     "axios": "^1.13.6",
->>>>>>> b8442c7e178eb545f3f0f288177468f599545b2c
     "cors": "^2.8.6",
     "express": "^5.2.1"
   }

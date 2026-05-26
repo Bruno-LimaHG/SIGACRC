@@ -1,17 +1,4 @@
 body {
-<<<<<<< HEAD
-    font-family: Arial;
-    padding: 20px;
-}
-
-input, button {
-    padding: 10px;
-    margin: 5px;
-}
-
-#resultado {
-    margin-top: 20px;
-=======
     font-family: Arial, sans-serif;
     background: #111;
     color: white;
@@ -49,5 +36,4 @@ button:hover {
 #resultado {
     margin-top: 30px;
     font-size: 18px;
->>>>>>> b8442c7e178eb545f3f0f288177468f599545b2c
 }
