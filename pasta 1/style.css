@@ -1,0 +1,339 @@
+/* RESSET  */
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* BODY                              */
+
+
+body{
+    background-color: #f2f2f2;
+}
+
+/* CONTAINER PRINCIPAL               */
+.container{
+    display: flex;
+    min-height: 100vh;
+}
+
+/* MENU LATERAL                      */
+
+.sidebar{
+
+    width: 230px;
+    background-color: #a8b28d;
+    padding-top: 40px;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+}
+
+.sidebar h2{
+
+    padding-left: 20px;
+    margin-bottom: 30px;
+    font-size: 22px;
+    color: #3f4932;
+}
+
+.sidebar ul{
+    list-style: none;
+}
+
+.sidebar li{
+
+    padding: 18px 20px;
+    border-top: 1px solid rgba(0,0,0,0.08);
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.sidebar li:hover{
+    background-color: #95a07a;
+}
+
+.sidebar .ativo{
+
+    background-color: #95a07a;
+
+    font-weight: bold;
+}
+
+/* CONTEÚDO                          */
+
+.content{
+
+    flex: 1;
+
+    padding: 40px;
+}
+
+/* FILTRO                            */
+
+.filtro-area{
+    margin-bottom: 25px;
+}
+
+.filtro-area label{
+
+    background-color: #d8d8d8;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+}
+
+.filtro-box{
+
+    margin-top: 10px;
+    background-color: #a8b28d;
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    border-radius: 6px;
+}
+
+.filtro-box input{
+
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 15px;
+}
+
+.filtro-box input::placeholder{
+    color: #2d2d2d;
+}
+
+.filtro-box i{
+
+    cursor: pointer;
+    font-size: 18px;
+}
+
+/* TABELA                            */
+
+table{
+
+    width: 100%;
+
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+thead{
+
+    background-color: #a8b28d;
+}
+
+th{
+
+    padding: 15px;
+    text-align: left;
+    font-size: 14px;
+    color: #2d2d2d;
+}
+
+td{
+
+    padding: 15px;
+    font-size: 14px;
+    border-top: 1px solid rgba(0,0,0,0.08);
+}
+
+tbody tr{
+
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+tbody tr:hover{
+
+    background-color: #eef1e7;
+}
+
+
+/* STATUS                            */
+
+.status-pendente{
+
+    color: #c47d00;
+    font-weight: bold;
+}
+
+.status-aprovado{
+
+    color: green;
+    font-weight: bold;
+}
+
+.status-recusado{
+
+    color: crimson;
+    font-weight: bold;
+}
+
+.status-analise{
+
+    color: #0066cc;
+    font-weight: bold;
+}
+
+
+/* MODAL                             */
+
+.modal{
+
+    display: none;
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background-color: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-conteudo{
+
+    background-color: #dfe4d3;
+    width: 550px;
+    max-width: 90%;
+    padding: 30px;
+    border-radius: 10px;
+    position: relative;
+    animation: aparecer 0.3s ease;
+}
+
+/* ANIMAÇÃO MODAL, QUE MISERAVEL INVENTOU ESSE BOSTA?               */
+
+@keyframes aparecer{
+
+    from{
+
+        opacity: 0;
+
+        transform: scale(0.9);
+    }
+
+    to{
+
+        opacity: 1;
+
+        transform: scale(1);
+    }
+}
+
+/* FECHAR MODAL                      */
+
+.fechar{
+
+    position: absolute;
+
+    right: 20px;
+
+    top: 15px;
+
+    font-size: 30px;
+
+    cursor: pointer;
+}
+
+/* TEXTO MODAL                       */
+
+.modal-conteudo h2{
+
+    margin-bottom: 20px;
+    color: #556046;
+}
+
+.modal-conteudo h3{
+
+    margin-top: 20px;
+    margin-bottom: 10px;
+    color: #556046;
+}
+
+.modal-conteudo p{
+
+    margin-bottom: 10px;
+
+    font-size: 15px;
+}
+
+/* DOCUMENTOS                        */
+
+
+.documentos{
+
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.documentos button{
+
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    background-color: white;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.documentos button:hover{
+
+    background-color: #cfd6c1;
+}
+
+/* BOTÕES, BOTÕES E MAIS BOTÕES, OH GLORIA                   */
+
+.acoes{
+
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.aprovar{
+
+    background-color: green;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.aprovar:hover{
+
+    transform: scale(1.05);
+}
+
+.rejeitar{
+
+    background-color: crimson;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.rejeitar:hover{
+
+    transform: scale(1.05);
+}

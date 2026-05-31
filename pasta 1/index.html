@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Painel do Funcionário</title>
+
+    <!-- Arquivo CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Font Awesome (ícones) -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+
+<body>
+
+   
+    <!-- CONTAINER PRINCIPAL                                -->
+    
+
+    <div class="container">
+
+        
+        <!-- MENU LATERAL                                   -->
+       
+
+        <aside class="sidebar">
+
+            <h2>PEDIDOS</h2>
+
+            <ul>
+
+                <li class="ativo">
+                    EM ANDAMENTO
+                </li>
+
+                <li>
+                    PENDENTES
+                </li>
+
+                <li>
+                    CONCLUÍDOS
+                </li>
+
+                <li>
+                    ARQUIVADOS
+                </li>
+
+                <li>
+                    AGENDA
+                </li>
+
+                <li>
+                    CONFIGURAÇÕES
+                </li>
+
+            </ul>
+
+        </aside>
+
+        
+        <!-- CONTEÚDO PRINCIPAL                             -->
+      
+
+        <main class="content">
+
+            <!-- FILTRO...maldito                              -->
+            
+
+            <div class="filtro-area">
+
+                <label>FILTRO</label>
+
+                <div class="filtro-box">
+
+                    <input
+                        type="text"
+                        id="filtro"
+                        placeholder="Pesquisar cliente, CPF ou tipo de casamento...">
+
+                    <i class="fa-solid fa-filter"></i>
+
+                </div>
+
+            </div>
+
+           
+            <!-- TABELA DE PEDIDOS                          -->
+           
+
+            <table id="tabelaPedidos">
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>SOLICITANTE</th>
+
+                        <th>TIPO DE CASAMENTO</th>
+
+                        <th>CPF</th>
+
+                        <th>STATUS</th>
+
+                    </tr>
+
+                </thead>
+
+                <!--
+                    O JavaScript irá preencher
+                    ESPERO, pelo amor de deus.
+                -->
+
+                <tbody id="corpoTabela">
+
+                </tbody>
+
+            </table>
+
+        </main>
+
+    </div>
+
+     
+    <!-- MODAL DE DETALHES DO PEDIDO                        -->
+    
+
+    <div class="modal" id="modal">
+
+        <div class="modal-conteudo">
+
+            <!-- Botão fechar -->
+
+            <span
+                class="fechar"
+                id="fecharModal">
+
+                &times;
+
+            </span>
+
+            <h2>
+                Detalhes do Pedido
+            </h2>
+
+            
+            <!-- DADOS DO CASAL                             -->
+           
+
+            <p id="nomeSolicitante"></p>
+            <p id="nomeConjuge"></p>
+            <p id="tipoCasamento"></p>
+            <p id="dataCasamento"></p>
+
+            <!-- TESTEMUNHAS                                -->
+           
+
+            <p id="testemunha1"></p>
+            <p id="testemunha2"></p>
+
+           
+            <!-- DOCUMENTOS                                 -->
+            
+
+            <h3>
+                Documentos
+            </h3>
+
+            <div
+                id="documentos"
+                class="documentos">
+
+            </div>
+
+            
+             */ BOTÕES DE AÇÃO  */ 
+        
+
+            <div class="acoes">
+
+                <button
+                    id="btnAprovar"
+                    class="aprovar">
+
+                    Aprovar
+
+                </button>
+
+                <button
+                    id="btnRecusar"
+                    class="rejeitar">
+
+                    Recusar
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Arquivo JavaScript -->
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
