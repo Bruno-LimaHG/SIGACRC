@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGACRC - Área do Cliente</title>
+    <link rel="stylesheet" href="../assets/css/sigacrc.css">
+</head>
+<body>
+    <header class="topbar">
+        <div class="layout topbar-conteudo">
+            <a class="marca" href="../tela_inicial/tela_inicial.html">
+                <strong>SIGACRC</strong>
+                <span>Área do cliente</span>
+            </a>
+            <nav class="nav-acoes">
+                <a class="btn btn-secundario" href="../central_ajuda/central_ajuda.html">Ajuda</a>
+                <a class="btn btn-secundario" href="../acompanhamento/acompanhamento.html">Consultar protocolo</a>
+                <button type="button" id="btnAbrirAtendimentoTopo" class="btn-secundario">Falar com escrevente</button>
+                <button type="button" id="btnSair" class="btn-escuro">Sair</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="layout dashboard">
+        <section class="dashboard-topo">
+            <div>
+                <span class="tag">Cliente</span>
+                <h1 id="tituloCliente">Área do cliente</h1>
+                <p>Inicie um novo pedido de casamento civil, acompanhe protocolos ou tire dúvidas com um escrevente.</p>
+            </div>
+            <div class="form-acoes">
+                <a class="btn" href="../formulario_casamento/formulario_casamento.html">Novo pedido</a>
+                <button type="button" id="btnAbrirAtendimento" class="btn-secundario">Falar com escrevente</button>
+            </div>
+        </section>
+
+        <section class="metricas">
+            <article class="metrica">
+                <span>Total</span>
+                <strong id="totalPedidos">0</strong>
+            </article>
+            <article class="metrica">
+                <span>Pendentes</span>
+                <strong id="totalPendentes">0</strong>
+            </article>
+            <article class="metrica">
+                <span>Em análise</span>
+                <strong id="totalAnalise">0</strong>
+            </article>
+            <article class="metrica">
+                <span>Concluídos</span>
+                <strong id="totalConcluidos">0</strong>
+            </article>
+        </section>
+
+        <section class="grid-cards" style="margin-bottom: 24px;">
+            <article class="card">
+                <h3>Novo pedido</h3>
+                <p>Preencha o formulário em etapas e envie seus documentos para análise.</p>
+                <div class="form-acoes">
+                    <a class="btn" href="../formulario_casamento/formulario_casamento.html">Abrir formulário</a>
+                </div>
+            </article>
+            <article class="card">
+                <h3>Acompanhar protocolo</h3>
+                <p>Consulte o status do pedido, observações e histórico de análise.</p>
+                <div class="form-acoes">
+                    <a class="btn btn-secundario" href="../acompanhamento/acompanhamento.html">Consultar</a>
+                </div>
+            </article>
+            <article class="card">
+                <h3>Atendimento com escrevente</h3>
+                <p>Envie uma dúvida e aguarde a resposta da equipe interna.</p>
+                <div class="form-acoes">
+                    <button type="button" id="btnAbrirAtendimentoCard" class="btn-secundario">Abrir atendimento</button>
+                </div>
+            </article>
+        </section>
+
+        <section class="card">
+            <div class="dashboard-topo">
+                <div>
+                    <h2>Meus protocolos</h2>
+                    <p>Pedidos salvos neste navegador aparecem abaixo.</p>
+                </div>
+            </div>
+
+            <div id="listaPedidosCliente" class="lista-cards"></div>
+        </section>
+    </main>
+
+    <section id="modalAtendimentoCliente" class="modal oculto" aria-hidden="true">
+        <div class="modal-card">
+            <div class="modal-topo">
+                <div>
+                    <span class="tag">Atendimento</span>
+                    <h2>Falar com escrevente</h2>
+                    <p>Envie dúvidas sobre documentos, protocolo ou preenchimento do formulário.</p>
+                </div>
+                <button type="button" id="btnFecharAtendimento" class="btn-secundario">Fechar</button>
+            </div>
+
+            <div class="atendimento-grid">
+                <form id="formAtendimentoCliente" class="card" style="box-shadow: none;">
+                    <h3>Nova mensagem</h3>
+                    <p>Descreva sua dúvida com clareza. A resposta aparecerá nesta mesma área.</p>
+                    <div class="campo" style="margin-top: 14px;">
+                        <label for="mensagemAtendimentoCliente">Mensagem</label>
+                        <textarea id="mensagemAtendimentoCliente" rows="6" placeholder="Ex: Estou com dúvida sobre a certidão atualizada."></textarea>
+                    </div>
+                    <div class="form-acoes">
+                        <button type="submit">Enviar para o escrevente</button>
+                    </div>
+                    <div id="mensagemAtendimentoSistema" class="mensagem oculto"></div>
+                </form>
+
+                <div class="card" style="box-shadow: none;">
+                    <h3>Minhas conversas</h3>
+                    <p>Histórico de mensagens enviadas para a equipe.</p>
+                    <div id="listaAtendimentosCliente" class="lista-cards" style="margin-top: 14px;"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="../assets/js/sigacrc-storage.js"></script>
+    <script src="area_cliente.js"></script>
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGACRC - Painel do Funcionário</title>
+    <link rel="stylesheet" href="../assets/css/sigacrc.css">
+</head>
+<body>
+    <header class="topbar">
+        <div class="layout topbar-conteudo">
+            <a class="marca" href="painel_escrevente.html">
+                <strong>SIGACRC</strong>
+                <span>Painel do escrevente</span>
+            </a>
+            <nav class="nav-acoes">
+                <a class="btn btn-secundario" href="../tela_inicial/tela_inicial.html">Início</a>
+                <button type="button" id="btnSairFuncionario" class="btn-escuro">Sair</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="layout dashboard">
+        <section class="dashboard-topo">
+            <div>
+                <span class="tag">Análise interna</span>
+                <h1>Painel de pedidos</h1>
+                <p>Visualize pedidos enviados pelo formulário, responda clientes e atualize o status do protocolo.</p>
+            </div>
+            <div class="form-acoes">
+                <a class="btn btn-secundario" href="../formulario_casamento/formulario_casamento.html">Abrir formulário</a>
+            </div>
+        </section>
+
+        <section class="metricas">
+            <article class="metrica">
+                <span>Total</span>
+                <strong id="metricaTotal">0</strong>
+            </article>
+            <article class="metrica">
+                <span>Pendentes</span>
+                <strong id="metricaPendentes">0</strong>
+            </article>
+            <article class="metrica">
+                <span>Em análise</span>
+                <strong id="metricaAnalise">0</strong>
+            </article>
+            <article class="metrica">
+                <span>Exigências</span>
+                <strong id="metricaExigencia">0</strong>
+            </article>
+            <article class="metrica">
+                <span>Atendimentos</span>
+                <strong id="metricaAtendimentos">0</strong>
+            </article>
+        </section>
+
+        <section class="card">
+            <div class="filtros">
+                <div class="campo">
+                    <label for="buscaPedido">Buscar</label>
+                    <input type="search" id="buscaPedido" placeholder="Protocolo, nome ou CPF">
+                </div>
+                <div class="campo">
+                    <label for="filtroStatus">Status</label>
+                    <select id="filtroStatus">
+                        <option value="todos">Todos</option>
+                        <option value="Pendente">Pendente</option>
+                        <option value="Em análise">Em análise</option>
+                        <option value="Exigência documental">Exigência documental</option>
+                        <option value="Aprovado">Aprovado</option>
+                        <option value="Recusado">Recusado</option>
+                    </select>
+                </div>
+                <button type="button" id="btnLimparFiltros" class="btn-secundario">Limpar</button>
+            </div>
+        </section>
+
+        <section class="tabela-wrap" aria-label="Tabela de pedidos">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Protocolo</th>
+                        <th>Contraentes</th>
+                        <th>Data</th>
+                        <th>Tipo</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="corpoTabelaPedidos"></tbody>
+            </table>
+        </section>
+
+        <div id="estadoVazio" class="mensagem oculto">
+            Nenhum pedido encontrado. Para testar, preencha o formulário de casamento e finalize o envio.
+        </div>
+
+        <section class="card" style="margin-top: 24px;">
+            <div class="dashboard-topo">
+                <div>
+                    <span class="tag">Atendimento</span>
+                    <h2>Mensagens dos clientes</h2>
+                    <p>Responda dúvidas enviadas pela área do cliente.</p>
+                </div>
+                <span class="badge-contador" id="contadorAtendimentosAbertos">0</span>
+            </div>
+            <div id="listaAtendimentosFuncionario" class="lista-cards"></div>
+            <div id="estadoAtendimentoVazio" class="mensagem oculto">
+                Nenhuma mensagem de cliente foi enviada ainda.
+            </div>
+        </section>
+    </main>
+
+    <section id="modalPedido" class="modal oculto" aria-hidden="true">
+        <div class="modal-card">
+            <div class="modal-topo">
+                <div>
+                    <span class="tag">Detalhes do pedido</span>
+                    <h2 id="modalProtocolo">Protocolo</h2>
+                    <p id="modalContraentes"></p>
+                </div>
+                <button type="button" id="btnFecharModal" class="btn-secundario">Fechar</button>
+            </div>
+
+            <div id="modalDetalhes" class="detalhes-grid"></div>
+
+            <div class="card" style="box-shadow: none; margin-bottom: 16px;">
+                <h3>Documentos anexados</h3>
+                <div id="modalDocumentos"></div>
+            </div>
+
+            <div class="card" style="box-shadow: none; margin-bottom: 16px;">
+                <h3>Histórico</h3>
+                <div id="modalHistorico"></div>
+            </div>
+
+            <form id="formAtualizarPedido" class="form-grid">
+                <div class="campo">
+                    <label for="novoStatus">Novo status</label>
+                    <select id="novoStatus">
+                        <option>Pendente</option>
+                        <option>Em análise</option>
+                        <option>Exigência documental</option>
+                        <option>Aprovado</option>
+                        <option>Recusado</option>
+                    </select>
+                </div>
+
+                <div class="campo campo-grande">
+                    <label for="observacaoEscrevente">Observação do escrevente</label>
+                    <textarea id="observacaoEscrevente" placeholder="Ex: Certidão ilegível, reenviar documento."></textarea>
+                </div>
+
+                <div class="form-acoes campo-grande">
+                    <button type="submit">Salvar análise</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <section id="modalAtendimentoFuncionario" class="modal oculto" aria-hidden="true">
+        <div class="modal-card">
+            <div class="modal-topo">
+                <div>
+                    <span class="tag">Resposta ao cliente</span>
+                    <h2 id="modalAtendimentoTitulo">Atendimento</h2>
+                    <p id="modalAtendimentoCliente"></p>
+                </div>
+                <button type="button" id="btnFecharAtendimentoFuncionario" class="btn-secundario">Fechar</button>
+            </div>
+
+            <div id="historicoAtendimentoFuncionario" class="chat-historico" style="margin-bottom: 16px;"></div>
+
+            <form id="formResponderAtendimento" class="form-grid">
+                <div class="campo campo-grande">
+                    <label for="respostaAtendimentoFuncionario">Resposta do escrevente</label>
+                    <textarea id="respostaAtendimentoFuncionario" rows="5" placeholder="Digite a resposta que será exibida para o cliente."></textarea>
+                </div>
+                <div class="form-acoes campo-grande">
+                    <button type="submit">Enviar resposta</button>
+                </div>
+                <div id="mensagemRespostaAtendimento" class="mensagem oculto campo-grande"></div>
+            </form>
+        </div>
+    </section>
+
+    <script src="../assets/js/sigacrc-storage.js"></script>
+    <script src="painel_escrevente.js"></script>
+</body>
+</html>

@@ -1,64 +1,57 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulário de Casamento</title>
-    <!-- Linka o CSS principal do formulário -->
+    <title>SIGACRC - Formulário de Casamento</title>
     <link rel="stylesheet" href="css/formulario.css">
 </head>
 <body>
+    <div class="pagina">
+        <main class="form-box">
+            <header class="topo">
+                <div>
+                    <span class="tag">SIGACRC</span>
+                    <h1>Formulário de Casamento</h1>
+                    <p>Preencha os dados por etapas. Ao finalizar, o sistema gerará um protocolo e enviará o pedido para o painel do funcionário.</p>
+                    <div class="links-topo">
+                        <a href="../tela_inicial/tela_inicial.html">Início</a>
+                        <a href="../area_cliente/area_cliente.html">Área do cliente</a>
+                        <a href="../central_ajuda/central_ajuda.html">Documentos necessários</a>
+                    </div>
+                </div>
 
-<!-- Container geral da página -->
-<div class="pagina">
-    <main class="form-box">
+                <button type="button" id="btnContraste" class="btn-contraste btn-tema" aria-label="Alternar tema">
+                    <img src="../imagens/modo-escuro.png" alt="Alternar tema">
+                </button>
+            </header>
 
-                <!-- Cabeçalho com título e botão de contraste -->
-        <header class="topo">
-            <div>
-                <span class="tag">SIGACRC</span>
-                <h1>Formulário de Casamento</h1>
-                <p>Preencha os dados por etapas, sem abrir outra aba.</p>
+            <div class="progresso-area">
+                <div class="progresso-info">
+                    <span id="textoEtapa">Etapa 1 de 8</span>
+                    <span id="porcentagem">12%</span>
+                </div>
+
+                <div class="barra">
+                    <div id="barraProgresso"></div>
+                </div>
             </div>
 
-            <!-- Botão com ícone para alternar entre tema normal e alto contraste -->
-            <button type="button" id="btnContraste" class="btn-contraste btn-tema" aria-label="Alternar tema">
-                <img src="../imagens/modo-escuro.png" alt="Alternar tema">
-            </button>
-        </header>
+            <form id="formCasamento">
+                <section id="conteudoEtapa"></section>
 
-                <!-- Mostra o progresso das etapas do formulário -->
-        <div class="progresso-area">
-            <div class="progresso-info">
-                <span id="textoEtapa">Etapa 1 de 8</span>
-                <span id="porcentagem">12%</span>
-            </div>
+                <div id="mensagemFormulario" class="aviso oculto"></div>
 
-            <div class="barra">
-                <div id="barraProgresso"></div>
-            </div>
-        </div>
+                <div class="botoes">
+                    <button type="button" id="btnAnterior" class="btn-secundario">Anterior</button>
+                    <button type="button" id="btnProximo">Próximo</button>
+                    <button type="submit" id="btnFinalizar" class="oculto">Finalizar e gerar protocolo</button>
+                </div>
+            </form>
+        </main>
+    </div>
 
-                <!-- Formulário principal que recebe as etapas carregadas pelo JS -->
-        <form id="formCasamento">
-
-            <!-- Aqui o JavaScript carrega os arquivos da pasta etapas -->
-            <!-- Área onde cada arquivo de etapa será carregado pelo formulario.js -->
-            <section id="conteudoEtapa"></section>
-
-                        <!-- Botões de navegação entre as etapas -->
-            <div class="botoes">
-                <button type="button" id="btnAnterior" class="btn-secundario">Anterior</button>
-                <button type="button" id="btnProximo">Próximo</button>
-                <button type="submit" id="btnFinalizar" class="oculto">Finalizar</button>
-            </div>
-
-        </form>
-
-    </main>
-</div>
-
-<!-- Linka o JavaScript principal do formulário -->
-<script src="js/formulario.js"></script>
+    <script src="../assets/js/sigacrc-storage.js"></script>
+    <script src="js/formulario.js"></script>
 </body>
 </html>

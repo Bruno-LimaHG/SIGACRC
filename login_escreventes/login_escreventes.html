@@ -1,49 +1,51 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Tela de Login</title>
-    <link rel="stylesheet" href="login_escreventes.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGACRC - Login do Funcionário</title>
+    <link rel="stylesheet" href="../assets/css/sigacrc.css">
 </head>
 <body>
+    <main class="auth-page">
+        <section class="auth-card">
+            <aside class="auth-image">
+                <div>
+                    <h2>Acesso restrito</h2>
+                    <p>Área destinada aos escreventes para análise e acompanhamento dos pedidos.</p>
+                </div>
+            </aside>
 
-    <!-- IMAGEM DE FUNDO (troque o nome depois) -->
-    <div class="background"></div>
+            <div class="auth-content">
+                <span class="tag">Funcionários</span>
+                <h1>Escolha a forma de login</h1>
+                <p>Para o MVP, os métodos abaixo simulam autenticação institucional.</p>
 
-    <div class="login-box">
+                <div class="lista-cards" style="margin-top: 22px;">
+                    <button type="button" class="btnMetodoLogin btn-secundario" data-metodo="Identificação do Registro Civil">
+                        <img src="../imagens/idrc.png" alt="IdRC" style="width: 54px;"> Entrar com identificação do Registro Civil
+                    </button>
 
-        <h1>Bem Vindo!</h1>
-        <p>Escolha a forma de login</p>
+                    <button type="button" class="btnMetodoLogin" data-metodo="Certificado Digital ICP-Brasil">
+                        <img src="../imagens/icp.png" alt="ICP Brasil" style="width: 54px;"> Entrar com Certificado Digital ICP-Brasil
+                    </button>
 
-        <!-- Botão 1 -->
-        <button class="login-btn">
-            <img src="../imagens/idrc.png" alt="IdRC">
-            <span>Entrar com identificação do Registro Civil</span>
-        </button>
+                    <button type="button" class="btnMetodoLogin btn-secundario" data-metodo="Gov.br institucional">
+                        <img src="../imagens/govbr.png" alt="Gov.br" style="width: 54px;"> Entrar com Gov.br
+                    </button>
+                </div>
 
-        <!-- Botão 2 -->
-        <button class="login-btn" id="btnToken">
-            <img src="../imagens/icp.png" alt="ICP Brasil">
-            <span>Entrar com Certificado Digital ICP-Brasil</span>
-        </button>
+                <div id="mensagemFuncionario" class="mensagem oculto"></div>
 
-        <!-- Botão 3 -->
-        <button class="login-btn">
-            <img src="../imagens/govbr.png" alt="Gov.br">
-            <span>Entrar com Gov.br</span>
-        </button>
+                <div class="form-acoes">
+                    <a href="../tela_inicial/tela_inicial.html">Voltar para início</a>
+                    <a href="../login_clientes/login_clientes.html">Sou cliente</a>
+                </div>
+            </div>
+        </section>
+    </main>
 
-        <button class="back-btn" id="btnVoltar">
-            Voltar para a página inicial
-        </button>
-
-        <div class="cliente-link">
-            <a href="#" id="linkCliente">Sou cliente</a>
-        </div>
-
-    </div>
-
-<script src="login_escreventes.js"></script>
-
+    <script src="../assets/js/sigacrc-storage.js"></script>
+    <script src="login_escreventes.js"></script>
 </body>
 </html>

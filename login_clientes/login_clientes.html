@@ -1,46 +1,54 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Login</title>
-  <link rel="stylesheet" href="login_clientes.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGACRC - Login do Cliente</title>
+    <link rel="stylesheet" href="../assets/css/sigacrc.css">
 </head>
 <body>
+    <main class="auth-page">
+        <section class="auth-card">
+            <aside class="auth-image">
+                <div>
+                    <h2>SIGACRC</h2>
+                    <p>Acesse sua área para iniciar ou acompanhar pedidos de casamento civil.</p>
+                </div>
+            </aside>
 
-  <div class="container">
-    
-    <!-- Imagem lateral (igual antes) -->
-    <div class="image"></div>
+            <div class="auth-content">
+                <span class="tag">Área do cliente</span>
+                <h1>Entrar</h1>
+                <p>Use o e-mail ou CPF cadastrado para acessar o sistema.</p>
 
-    <!-- Caixa de login -->
-    <div class="login-box">
-      <h2>Login</h2>
+                <form id="formLoginCliente" class="form-grid">
+                    <div class="campo campo-grande">
+                        <label for="identificador">E-mail ou CPF</label>
+                        <input type="text" id="identificador" placeholder="Digite seu e-mail ou CPF" autocomplete="username">
+                    </div>
 
-      <div class="input-group">
-        <input type="text" placeholder="Coloque seu email ou CPF">
-        <span>👤</span>
-      </div>
+                    <div class="campo campo-grande">
+                        <label for="senha">Senha</label>
+                        <input type="password" id="senha" placeholder="Digite sua senha" autocomplete="current-password">
+                    </div>
 
-      <div class="input-group">
-        <input type="password" id="senha" placeholder="Senha">
-        <span>🔒</span>
-      </div>
+                    <div class="form-acoes campo-grande">
+                        <button type="submit">Entrar</button>
+                        <a class="btn btn-secundario" href="../cadastro_clientes/cadastro_clientes.html">Criar cadastro</a>
+                    </div>
+                </form>
 
-      <button class="login-btn" onclick="login()">Entrar</button>
+                <div id="mensagemLogin" class="mensagem oculto"></div>
 
+                <div class="form-acoes">
+                    <a href="../tela_inicial/tela_inicial.html">Voltar para início</a>
+                    <a href="../login_escreventes/login_escreventes.html">Sou funcionário</a>
+                </div>
+            </div>
+        </section>
+    </main>
 
-      <div class="funcionario-link">
-        <a href="#" onclick="irParaCadastro()">Ainda não tenho cadastro</a>
-      </div>
-
-      <!-- Link funcionário -->
-      <div class="funcionario-link">
-        <a href="#" onclick="irParaFuncionarios()">Sou funcionário</a>
-      </div>
-    </div>
-
-  </div>
-
-  <script src="login_clientes.js"></script>
+    <script src="../assets/js/sigacrc-storage.js"></script>
+    <script src="login_clientes.js"></script>
 </body>
 </html>

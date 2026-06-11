@@ -1,50 +1,63 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Cadastro</title>
-  <link rel="stylesheet" href="cadastro_clientes.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGACRC - Cadastro do Cliente</title>
+    <link rel="stylesheet" href="../assets/css/sigacrc.css">
 </head>
 <body>
+    <main class="auth-page">
+        <section class="auth-card">
+            <aside class="auth-image">
+                <div>
+                    <h2>Cadastro seguro</h2>
+                    <p>Crie seu acesso para enviar o formulário e acompanhar o protocolo.</p>
+                </div>
+            </aside>
 
-  <div class="container">
-    
-    <!-- Imagem lateral -->
-    <div class="image"></div>
+            <div class="auth-content">
+                <span class="tag">Novo cliente</span>
+                <h1>Criar cadastro</h1>
+                <p>Preencha os dados principais para simular o acesso ao SIGACRC.</p>
 
-    <!-- Caixa de cadastro -->
-    <div class="login-box">
-      <h2>Cadastro</h2>
+                <form id="formCadastroCliente" class="form-grid">
+                    <div class="campo campo-grande">
+                        <label for="nome">Nome completo</label>
+                        <input type="text" id="nome" placeholder="Digite seu nome completo" autocomplete="name">
+                    </div>
 
-      <div class="input-group">
-        <input type="text" id="nome" placeholder="Nome completo">
-        <span>👤</span>
-      </div>
+                    <div class="campo campo-grande">
+                        <label for="email">E-mail</label>
+                        <input type="email" id="email" placeholder="seuemail@exemplo.com" autocomplete="email">
+                    </div>
 
-      <div class="input-group">
-        <input type="text" id="email" placeholder="Email">
-        <span>📧</span>
-      </div>
+                    <div class="campo">
+                        <label for="cpf">CPF</label>
+                        <input type="text" id="cpf" placeholder="000.000.000-00" maxlength="14">
+                    </div>
 
-      <div class="input-group">
-        <input type="text" id="cpf" placeholder="CPF">
-        <span>🪪</span>
-      </div>
+                    <div class="campo">
+                        <label for="senha">Senha</label>
+                        <input type="password" id="senha" placeholder="Mínimo 4 caracteres" autocomplete="new-password">
+                    </div>
 
-      <div class="input-group">
-        <input type="password" id="senha" placeholder="Senha">
-        <span>🔒</span>
-      </div>
+                    <div class="form-acoes campo-grande">
+                        <button type="submit">Cadastrar</button>
+                        <a class="btn btn-secundario" href="../login_clientes/login_clientes.html">Já tenho conta</a>
+                    </div>
+                </form>
 
-      <button class="login-btn" onclick="cadastrar()">Cadastrar</button>
+                <div id="mensagemCadastro" class="mensagem oculto"></div>
 
-      <div class="funcionario-link">
-        <a href="../login_clientes/login_clientes.html">Já tenho conta</a>
-      </div>
-    </div>
+                <div class="form-acoes">
+                    <a href="../tela_inicial/tela_inicial.html">Voltar para início</a>
+                </div>
+            </div>
+        </section>
+    </main>
 
-  </div>
-
-  <script src="cadastro_clientes.js"></script>
+    <script src="../assets/js/sigacrc-storage.js"></script>
+    <script src="cadastro_clientes.js"></script>
 </body>
 </html>

@@ -1,12 +1,16 @@
-document.getElementById("linkCliente").addEventListener("click", function(e) {
-  e.preventDefault();
-  window.location.href = "../login_clientes/login_clientes.html";
-});
+const mensagemFuncionario = document.getElementById("mensagemFuncionario");
 
-console.log("Página de login carregada com sucesso");
+document.querySelectorAll(".btnMetodoLogin").forEach((botao) => {
+    botao.addEventListener("click", () => {
+        const metodo = botao.dataset.metodo;
+        sessionStorage.setItem("metodoLoginFuncionarioSIGACRC", metodo);
 
-const btnToken = document.getElementById("btnToken");
+        mensagemFuncionario.className = "mensagem sucesso";
+        mensagemFuncionario.textContent = `Método selecionado: ${metodo}. Redirecionando para a validação...`;
+        mensagemFuncionario.classList.remove("oculto");
 
-btnToken.addEventListener("click", function() {
-    window.location.href = "../login_token/token.html";
+        setTimeout(() => {
+            window.location.href = "../login_token/token.html";
+        }, 600);
+    });
 });

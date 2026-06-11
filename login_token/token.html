@@ -1,44 +1,41 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Certificado Digital - ICP Brasil</title>
-    <link rel="stylesheet" href="token.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGACRC - Validação do Funcionário</title>
+    <link rel="stylesheet" href="../assets/css/sigacrc.css">
 </head>
 <body>
+    <main class="auth-page">
+        <section class="auth-card">
+            <aside class="auth-image">
+                <div>
+                    <h2>Validação institucional</h2>
+                    <p>Simulação de certificado digital para acesso ao painel do escrevente.</p>
+                </div>
+            </aside>
 
-    <!-- MESMO FUNDO -->
-    <div class="background"></div>
+            <div class="auth-content">
+                <span class="tag">Certificado digital</span>
+                <h1>Reconhecendo acesso</h1>
+                <p id="descricaoMetodo">Conecte o token e aguarde o reconhecimento.</p>
 
-    <div class="login-box">
+                <div class="card" style="margin-top: 22px; text-align: center;">
+                    <img src="../imagens/icp.png" alt="ICP Brasil" style="width: 92px; margin-bottom: 16px;">
+                    <h3 id="statusToken">Procurando dispositivo...</h3>
+                    <p id="textoToken">A autenticação será simulada para fins de demonstração do TCC.</p>
+                </div>
 
-        <h1>Certificado Digital</h1>
-        <p>Conecte o token e aguarde o reconhecimento</p>
+                <div class="form-acoes">
+                    <button type="button" id="btnEntrarPainel">Entrar no painel</button>
+                    <a class="btn btn-secundario" href="../login_escreventes/login_escreventes.html">Voltar</a>
+                </div>
+            </div>
+        </section>
+    </main>
 
-        <!-- Ícone ou imagem do token (você pode trocar depois) -->
-        <div class="token-area">
-            <img src="../imagens/icp.png" alt="Token ICP">
-            <span>Procurando dispositivo...</span>
-        </div>
-
-        <!-- Botões -->
-        <button class="login-btn">
-            Tentar novamente
-        </button>
-
-        <button class="back-btn" id="btnVoltar">
-            Voltar para login
-        </button>
-
-    </div>
-
-    <script>
-        function voltar(){
-            window.location.href = "login_escreventes.html";
-        }
-    </script>
-
-<script src="token.js"></script>
-
+    <script src="../assets/js/sigacrc-storage.js"></script>
+    <script src="token.js"></script>
 </body>
 </html>

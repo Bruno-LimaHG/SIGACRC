@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGACRC - Acompanhamento de Protocolo</title>
+    <link rel="stylesheet" href="../assets/css/sigacrc.css">
+</head>
+<body>
+    <header class="topbar">
+        <div class="layout topbar-conteudo">
+            <a class="marca" href="../tela_inicial/tela_inicial.html">
+                <strong>SIGACRC</strong>
+                <span>Acompanhamento de protocolo</span>
+            </a>
+            <nav class="nav-acoes">
+                <a class="btn btn-secundario" href="../area_cliente/area_cliente.html">Área do cliente</a>
+                <a class="btn" href="../formulario_casamento/formulario_casamento.html">Novo pedido</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="layout dashboard">
+        <section class="card">
+            <span class="tag">Consulta</span>
+            <h1>Consultar protocolo</h1>
+            <p>Digite o número de protocolo gerado após o envio do formulário.</p>
+
+            <form id="formConsulta" class="form-grid">
+                <div class="campo campo-grande">
+                    <label for="campoProtocolo">Protocolo</label>
+                    <input type="text" id="campoProtocolo" placeholder="Ex: SIGACRC-20260606-1234">
+                </div>
+                <div class="form-acoes campo-grande">
+                    <button type="submit">Consultar</button>
+                </div>
+            </form>
+
+            <div id="resultadoConsulta" class="mensagem oculto"></div>
+        </section>
+    </main>
+
+    <script src="../assets/js/sigacrc-storage.js"></script>
+    <script src="acompanhamento.js"></script>
+</body>
+</html>

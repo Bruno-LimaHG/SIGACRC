@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGACRC - Protocolo Gerado</title>
+    <link rel="stylesheet" href="../assets/css/sigacrc.css">
+</head>
+<body>
+    <header class="topbar">
+        <div class="layout topbar-conteudo">
+            <a class="marca" href="../tela_inicial/tela_inicial.html">
+                <strong>SIGACRC</strong>
+                <span>Confirmação de envio</span>
+            </a>
+            <nav class="nav-acoes">
+                <a class="btn btn-secundario" href="../area_cliente/area_cliente.html">Área do cliente</a>
+                <a class="btn btn-escuro" href="../login_escreventes/login_escreventes.html">Funcionários</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="layout dashboard">
+        <section class="card">
+            <span class="tag">Pedido enviado</span>
+            <h1>Protocolo gerado com sucesso</h1>
+            <p>O pedido foi registrado no sistema e já pode ser visualizado no painel do funcionário.</p>
+
+            <div id="dadosProtocolo" class="mensagem sucesso"></div>
+
+            <div class="form-acoes">
+                <a id="linkAcompanhamento" class="btn" href="../acompanhamento/acompanhamento.html">Acompanhar protocolo</a>
+                <a class="btn btn-secundario" href="../formulario_casamento/formulario_casamento.html">Enviar novo pedido</a>
+                <a class="btn btn-escuro" href="../painel_escrevente/painel_escrevente.html">Ver no painel do funcionário</a>
+            </div>
+        </section>
+    </main>
+
+    <script src="../assets/js/sigacrc-storage.js"></script>
+    <script src="protocolo.js"></script>
+</body>
+</html>
