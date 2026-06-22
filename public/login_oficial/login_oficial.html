@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGACRC - Login do Oficial</title>
+    <link rel="stylesheet" href="../assets/css/sigacrc.css">
+</head>
+<body>
+    <main class="auth-page">
+        <section class="auth-card">
+            <aside class="auth-image">
+                <div>
+                    <h2>Administração</h2>
+                    <p>Acesso exclusivo para o Oficial responsável.</p>
+                </div>
+            </aside>
+
+            <div class="auth-content">
+                <span class="tag">Oficial</span>
+                <h1>Acesse sua conta</h1>
+                
+                <form id="formLoginOficial" class="form-grid" style="margin-top: 24px;">
+                    <div class="campo campo-grande">
+                        <label for="identificador">E-mail ou CPF</label>
+                        <input type="text" id="identificador" required placeholder="Digite seu e-mail ou CPF">
+                    </div>
+                    <div class="campo campo-grande">
+                        <label for="senha">Senha</label>
+                        <input type="password" id="senha" required placeholder="Digite sua senha">
+                    </div>
+                    <div class="form-acoes campo-grande">
+                        <button type="submit" class="btn" id="btnEntrar">Entrar</button>
+                    </div>
+                    <div id="mensagemErro" class="mensagem erro oculto campo-grande"></div>
+                </form>
+
+                <div class="form-acoes" style="margin-top: 24px;">
+                    <a href="../tela_inicial/tela_inicial.html">Voltar para início</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="../assets/js/sigacrc-storage.js?v=5"></script>
+    <script src="login_oficial.js?v=2"></script>
+</body>
+</html>

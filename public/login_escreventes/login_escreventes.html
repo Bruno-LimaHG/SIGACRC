@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGACRC - Login do Funcionário</title>
+    <link rel="stylesheet" href="../assets/css/sigacrc.css">
+</head>
+<body>
+    <main class="auth-page">
+        <section class="auth-card">
+            <aside class="auth-image">
+                <div>
+                    <h2>Acesso restrito</h2>
+                    <p>Área destinada aos escreventes para análise e acompanhamento dos pedidos.</p>
+                </div>
+            </aside>
+
+            <div class="auth-content">
+                <span class="tag">Funcionários</span>
+                <h1>Acesse sua conta</h1>
+                
+                <form id="formLoginEscrevente" class="form-grid" style="margin-top: 24px;">
+                    <div class="campo campo-grande">
+                        <label for="identificador">E-mail ou CPF</label>
+                        <input type="text" id="identificador" required placeholder="Digite seu e-mail ou CPF">
+                    </div>
+                    <div class="campo campo-grande">
+                        <label for="senha">Senha</label>
+                        <input type="password" id="senha" required placeholder="Digite sua senha">
+                    </div>
+                    <div class="form-acoes campo-grande">
+                        <button type="submit" class="btn" id="btnEntrar">Entrar</button>
+                    </div>
+                    <div id="mensagemErro" class="mensagem erro oculto campo-grande"></div>
+                </form>
+
+                <div class="form-acoes" style="margin-top: 24px;">
+                    <a href="../tela_inicial/tela_inicial.html">Voltar para início</a>
+                    <a href="../login_clientes/login_clientes.html">Sou cliente</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="../assets/js/sigacrc-storage.js?v=5"></script>
+    <script src="login_escreventes.js?v=3"></script>
+</body>
+</html>

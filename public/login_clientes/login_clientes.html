@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGACRC - Login do Cliente</title>
+    <link rel="stylesheet" href="../assets/css/sigacrc.css">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+    <main class="auth-page">
+        <section class="auth-card">
+            <aside class="auth-image">
+                <div>
+                    <h2>SIGACRC</h2>
+                    <p>Acesse sua área para iniciar ou acompanhar pedidos de casamento civil.</p>
+                </div>
+            </aside>
+
+            <div class="auth-content">
+                <span class="tag">Área do cliente</span>
+                <h1>Entrar</h1>
+                <p>Use o e-mail ou CPF cadastrado para acessar o sistema.</p>
+
+                <form id="formLoginCliente" class="form-grid">
+                    <div class="campo campo-grande">
+                        <label for="identificador">E-mail ou CPF</label>
+                        <input type="text" id="identificador" placeholder="Digite seu e-mail ou CPF" autocomplete="username">
+                    </div>
+
+                    <div class="campo campo-grande">
+                        <label for="senha">Senha</label>
+                        <input type="password" id="senha" placeholder="Digite sua senha" autocomplete="current-password">
+                    </div>
+
+                    <div class="form-acoes campo-grande">
+                        <button type="submit">Entrar</button>
+                        <a class="btn btn-secundario" href="../cadastro_clientes/cadastro_clientes.html">Criar cadastro</a>
+                    </div>
+                    
+                    <div class="campo campo-grande" style="text-align: center; margin-top: 10px;">
+                        <a href="#" id="linkEsqueciSenha" style="font-size: 0.9em; color: var(--cor-primaria);">Esqueci minha senha</a>
+                    </div>
+                    
+                    <div class="campo campo-grande">
+                        <div id="g_id_onload"
+                            data-client_id="943014478378-edc20egje94rlrbq4m8fsetmtdm03qlo.apps.googleusercontent.com"
+                            data-callback="handleCredentialResponse"
+                            data-auto_prompt="false">
+                        </div>
+                        <div class="g_id_signin"
+                            data-type="standard"
+                            data-size="large"
+                            data-theme="outline"
+                            data-text="sign_in_with"
+                            data-shape="rectangular"
+                            data-logo_alignment="left">
+                        </div>
+                    </div>
+                </form>
+
+                <div id="mensagemLogin" class="mensagem oculto"></div>
+
+                <div class="form-acoes">
+                    <a href="../tela_inicial/tela_inicial.html">Voltar para início</a>
+                    <a href="../login_escreventes/login_escreventes.html">Sou funcionário</a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Modal Esqueci a Senha -->
+        <section id="modalEsqueciSenha" class="modal oculto" aria-hidden="true">
+            <div class="modal-card">
+                <h2>Recuperar Senha</h2>
+                <p>Informe seu e-mail para receber um código de verificação.</p>
+                <div class="campo">
+                    <label for="emailRecuperacao">E-mail</label>
+                    <input type="email" id="emailRecuperacao" placeholder="Digite seu e-mail">
+                </div>
+                <div id="msgRecuperacao" class="mensagem oculto"></div>
+                <div class="form-acoes">
+                    <button type="button" id="btnEnviarCodigo">Enviar Código</button>
+                    <button type="button" id="btnFecharModal" class="btn btn-secundario">Cancelar</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modal Redefinir Senha -->
+        <section id="modalRedefinirSenha" class="modal oculto" aria-hidden="true">
+            <div class="modal-card">
+                <h2>Redefinir Senha</h2>
+                <p>Insira o código recebido no e-mail e a nova senha.</p>
+                <div class="campo">
+                    <label for="codigoVerificacao">Código</label>
+                    <input type="text" id="codigoVerificacao" placeholder="Ex: 123456">
+                </div>
+                <div class="campo">
+                    <label for="novaSenhaRecuperacao">Nova Senha</label>
+                    <input type="password" id="novaSenhaRecuperacao" placeholder="Digite a nova senha">
+                </div>
+                <div id="msgRedefinir" class="mensagem oculto"></div>
+                <div class="form-acoes">
+                    <button type="button" id="btnSalvarNovaSenha">Salvar Senha</button>
+                    <button type="button" id="btnFecharModalRedefinir" class="btn btn-secundario">Cancelar</button>
+                </div>
+            </div>
+        </section>
+        
+    </main>
+
+    <script src="../assets/js/sigacrc-storage.js?v=5"></script>
+    <script src="login_clientes.js"></script>
+</body>
+</html>

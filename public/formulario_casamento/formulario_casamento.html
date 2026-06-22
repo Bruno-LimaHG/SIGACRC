@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGACRC - Formulário de Casamento</title>
+    <link rel="stylesheet" href="css/formulario.css">
+</head>
+<body>
+    <div class="pagina">
+        <main class="form-box">
+            <header class="topo">
+                <div>
+                    <span class="tag">SIGACRC</span>
+                    <h1>Formulário de Casamento</h1>
+                    <p>Preencha os dados por etapas. Ao finalizar, o sistema gerará um protocolo e enviará o pedido para o painel do funcionário.</p>
+                    <div class="links-topo">
+                        <a href="../tela_inicial/tela_inicial.html">Início</a>
+                        <a href="../area_cliente/area_cliente.html">Área do cliente</a>
+                        <a href="../central_ajuda/central_ajuda.html">Documentos necessários</a>
+                    </div>
+                </div>
+
+                <button type="button" id="btnContraste" class="btn-contraste btn-tema" aria-label="Alternar tema">
+                    <img src="../imagens/modo-escuro.png" alt="Alternar tema">
+                </button>
+            </header>
+
+            <div class="progresso-area">
+                <div class="progresso-info">
+                    <span id="textoEtapa">Etapa 1 de 8</span>
+                    <span id="porcentagem">12%</span>
+                </div>
+
+                <div class="barra">
+                    <div id="barraProgresso"></div>
+                </div>
+            </div>
+
+            <div class="stepper-wrap">
+                <div class="stepper" id="stepper">
+                    <!-- JS preenche -->
+                </div>
+            </div>
+
+            <datalist id="listaNacionalidades">
+                <option value="Brasileiro(a)"></option>
+                <option value="Argentino(a)"></option>
+                <option value="Português(a)"></option>
+                <option value="Espanhol(a)"></option>
+                <option value="Italiano(a)"></option>
+                <option value="Japonês(a)"></option>
+                <option value="Outra"></option>
+            </datalist>
+
+            <datalist id="listaEstados">
+                <option value="SP"></option><option value="RJ"></option><option value="MG"></option>
+                <option value="ES"></option><option value="PR"></option><option value="SC"></option>
+                <option value="RS"></option><option value="BA"></option><option value="PE"></option>
+                <option value="CE"></option><option value="GO"></option><option value="DF"></option>
+                <option value="MT"></option><option value="MS"></option><option value="AM"></option>
+                <option value="PA"></option><option value="MA"></option><option value="PI"></option>
+                <option value="RN"></option><option value="PB"></option><option value="AL"></option>
+                <option value="SE"></option><option value="RO"></option><option value="AC"></option>
+                <option value="RR"></option><option value="AP"></option><option value="TO"></option>
+            </datalist>
+
+            <form id="formCasamento" aria-label="Formulário de casamento">
+                <section id="conteudoEtapa"></section>
+
+                <div id="mensagemFormulario" class="aviso oculto"></div>
+
+                <div class="botoes">
+                    <button type="button" id="btnAnterior" class="btn-secundario">Anterior</button>
+                    <button type="button" id="btnProximo">Próximo</button>
+                    <button type="submit" id="btnFinalizar" class="oculto">Finalizar e gerar protocolo</button>
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <script src="../assets/js/sigacrc-storage.js?v=5"></script>
+    <script src="js/formulario.js?v=2"></script>
+</body>
+</html>

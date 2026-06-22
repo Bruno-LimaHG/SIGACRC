@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGACRC - Validação do Funcionário</title>
+    <link rel="stylesheet" href="../assets/css/sigacrc.css">
+</head>
+<body>
+    <main class="auth-page">
+        <section class="auth-card">
+            <aside class="auth-image">
+                <div>
+                    <h2>Validação institucional</h2>
+                    <p>Simulação de certificado digital para acesso ao painel do escrevente.</p>
+                </div>
+            </aside>
+
+            <div class="auth-content">
+                <span class="tag">Certificado digital</span>
+                <h1>Reconhecendo acesso</h1>
+                <p id="descricaoMetodo">Conecte o token e aguarde o reconhecimento.</p>
+
+                <div class="card" style="margin-top: 22px; text-align: center;">
+                    <img src="../imagens/icp.png" alt="ICP Brasil" style="width: 92px; margin-bottom: 16px;">
+                    <h3 id="statusToken">Procurando dispositivo...</h3>
+                    <p id="textoToken">A autenticação será simulada para fins de demonstração do TCC.</p>
+                </div>
+
+                <div class="form-acoes">
+                    <button type="button" id="btnEntrarPainel">Entrar no painel</button>
+                    <a class="btn btn-secundario" href="../login_escreventes/login_escreventes.html">Voltar</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="../assets/js/sigacrc-storage.js?v=5"></script>
+    <script src="token.js"></script>
+</body>
+</html>

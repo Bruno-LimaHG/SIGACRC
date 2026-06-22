@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGACRC - Painel do Oficial</title>
+    <link rel="stylesheet" href="../assets/css/sigacrc.css">
+</head>
+<body>
+    <header class="topbar">
+        <div class="layout topbar-conteudo">
+            <a class="marca" href="painel_oficial.html">
+                <strong>SIGACRC</strong>
+                <span>Painel do Oficial</span>
+            </a>
+            <nav class="nav-acoes">
+                <a class="btn btn-secundario" href="../tela_inicial/tela_inicial.html">Início</a>
+                <button type="button" id="btnAlterarMinhaSenha" class="btn">Alterar Senha</button>
+                <button type="button" id="btnSairOficial" class="btn-escuro">Sair</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="layout dashboard">
+        <section class="dashboard-topo">
+            <div>
+                <span class="tag">Administração</span>
+                <h1>Gerenciar Funcionários</h1>
+                <p>Adicione ou remova escreventes do sistema.</p>
+            </div>
+            <div class="form-acoes">
+                <button type="button" id="btnAbrirModalAdicionar" class="btn">Adicionar Funcionário</button>
+            </div>
+        </section>
+
+        <section class="tabela-wrap" aria-label="Tabela de funcionários">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>E-mail</th>
+                        <th>CPF</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="corpoTabelaFuncionarios"></tbody>
+            </table>
+        </section>
+        <div id="estadoVazioFuncionarios" class="mensagem oculto">
+            Nenhum funcionário cadastrado.
+        </div>
+
+        <hr style="margin: 40px 0; border: none; border-top: 1px solid #ddd;">
+
+        <section class="dashboard-topo">
+            <div>
+                <span class="tag">Monitoramento</span>
+                <h2>Painel de pedidos</h2>
+                <p>Monitore os pedidos enviados pelo formulário.</p>
+            </div>
+        </section>
+
+        <section class="metricas">
+            <article class="metrica">
+                <span>Total</span>
+                <strong id="metricaTotal">0</strong>
+            </article>
+            <article class="metrica">
+                <span>Pendentes</span>
+                <strong id="metricaPendentes">0</strong>
+            </article>
+            <article class="metrica">
+                <span>Em análise</span>
+                <strong id="metricaAnalise">0</strong>
+            </article>
+            <article class="metrica">
+                <span>Exigências</span>
+                <strong id="metricaExigencia">0</strong>
+            </article>
+            <article class="metrica">
+                <span>Atendimentos</span>
+                <strong id="metricaAtendimentos">0</strong>
+            </article>
+        </section>
+
+        <section class="card">
+            <div class="filtros">
+                <div class="campo">
+                    <label for="buscaPedido">Buscar</label>
+                    <input type="search" id="buscaPedido" placeholder="Protocolo, nome ou CPF">
+                </div>
+                <div class="campo">
+                    <label for="filtroStatus">Status</label>
+                    <select id="filtroStatus">
+                        <option value="todos">Todos</option>
+                        <option value="Pendente">Pendente</option>
+                        <option value="Em análise">Em análise</option>
+                        <option value="Exigência documental">Exigência documental</option>
+                        <option value="Aprovado">Aprovado</option>
+                        <option value="Recusado">Recusado</option>
+                    </select>
+                </div>
+                <button type="button" id="btnLimparFiltros" class="btn-secundario">Limpar</button>
+            </div>
+        </section>
+
+        <section class="tabela-wrap" aria-label="Tabela de pedidos">
+            <table class="tabela">
+                <thead>
+                    <tr>
+                        <th>Protocolo</th>
+                        <th>Contraentes</th>
+                        <th style="cursor: pointer;" id="thDataOrdenacao">Data <span id="iconeOrdenacao">⬇️</span></th>
+                        <th>Tipo</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="corpoTabelaPedidos">
+                    <!-- JS preenche -->
+                </tbody>
+            </table>
+        </section>
+
+        <div id="paginacaoPedidos" class="form-acoes" style="justify-content: center; margin-top: 16px;">
+            <button type="button" id="btnPaginaAnterior" class="btn-secundario" disabled>Anterior</button>
+            <span id="textoPaginacao" style="align-self: center; font-weight: bold; padding: 0 16px;">Página 1</span>
+            <button type="button" id="btnProximaPagina" class="btn-secundario">Próxima</button>
+        </div>
+
+        <div id="estadoVazio" class="mensagem oculto">
+            Nenhum pedido encontrado.
+        </div>
+    </main>
+
+    <section id="modalAdicionarFuncionario" class="modal oculto" aria-hidden="true">
+        <div class="modal-card">
+            <div class="modal-topo">
+                <div>
+                    <span class="tag">Novo</span>
+                    <h2>Adicionar Funcionário</h2>
+                </div>
+                <button type="button" id="btnFecharModalAdicionar" class="btn-secundario">Fechar</button>
+            </div>
+
+            <form id="formAdicionarFuncionario" class="form-grid">
+                <div class="campo">
+                    <label for="novoNome">Nome completo</label>
+                    <input type="text" id="novoNome" required>
+                </div>
+                <div class="campo">
+                    <label for="novoEmail">E-mail</label>
+                    <input type="email" id="novoEmail" required>
+                </div>
+                <div class="campo">
+                    <label for="novoCpf">CPF</label>
+                    <input type="text" id="novoCpf" required>
+                </div>
+                <div class="campo">
+                    <label for="novaSenha">Senha</label>
+                    <input type="password" id="novaSenha" required minlength="4">
+                </div>
+                <div class="form-acoes campo-grande">
+                    <button type="submit">Cadastrar</button>
+                </div>
+                <div id="mensagemAdicionar" class="mensagem oculto campo-grande"></div>
+            </form>
+        </div>
+    </section>
+
+    <section id="modalAlterarSenhaFuncionario" class="modal oculto" aria-hidden="true">
+        <div class="modal-card">
+            <div class="modal-topo">
+                <div>
+                    <span class="tag">Administração</span>
+                    <h2>Alterar Senha do Funcionário</h2>
+                </div>
+                <button type="button" id="btnFecharModalSenhaFuncionario" class="btn-secundario">Fechar</button>
+            </div>
+
+            <form id="formAlterarSenhaFuncionario" class="form-grid">
+                <input type="hidden" id="senhaFuncionarioId">
+                <div class="campo campo-grande">
+                    <label for="novaSenhaFuncionario">Nova Senha</label>
+                    <input type="password" id="novaSenhaFuncionario" required minlength="4">
+                </div>
+                <div class="form-acoes campo-grande">
+                    <button type="submit">Salvar Senha</button>
+                </div>
+                <div id="mensagemSenhaFuncionario" class="mensagem oculto campo-grande"></div>
+            </form>
+        </div>
+    </section>
+
+    <section id="modalAlterarMinhaSenha" class="modal oculto" aria-hidden="true">
+        <div class="modal-card">
+            <div class="modal-topo">
+                <div>
+                    <span class="tag">Segurança</span>
+                    <h2>Alterar Minha Senha</h2>
+                </div>
+                <button type="button" id="btnFecharModalMinhaSenha" class="btn-secundario">Fechar</button>
+            </div>
+
+            <form id="formAlterarMinhaSenha" class="form-grid">
+                <div class="campo campo-grande">
+                    <label for="minhaNovaSenha">Nova Senha</label>
+                    <input type="password" id="minhaNovaSenha" required minlength="4">
+                </div>
+                <div class="form-acoes campo-grande">
+                    <button type="submit">Salvar Senha</button>
+                </div>
+                <div id="mensagemMinhaSenha" class="mensagem oculto campo-grande"></div>
+            </form>
+        </div>
+    </section>
+
+    <script src="../assets/js/sigacrc-storage.js?v=5"></script>
+    <script src="painel_oficial.js?v=4"></script>
+</body>
+</html>

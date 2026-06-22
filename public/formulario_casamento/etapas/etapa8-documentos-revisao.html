@@ -1,0 +1,165 @@
+<!-- Bloco final com checklist, anexos e resumo -->
+<h2>Documentos e revisão</h2>
+<p class="descricao">Anexe os documentos necessários antes de finalizar.</p>
+
+<!-- Lista de documentos com anexos -->
+<div class="checklist checklist-anexos">
+
+    <!-- Documento: certidões atualizadas -->
+    <div class="item-documento">
+        <div class="status-documento">
+            <input type="checkbox" id="doc_certidoes" name="doc_certidoes" disabled>
+            <label for="doc_certidoes">Certidões atualizadas</label>
+        </div>
+
+        <div class="area-anexo">
+            <label class="btn-anexo">
+                Anexar documento
+                <input type="file" multiple name="arquivo_certidoes" class="arquivo-documento" data-check="doc_certidoes">
+            </label>
+
+            <!-- Mostra o arquivo anexado e as ações disponíveis -->
+            <div class="arquivo-info oculto" data-info="arquivo_certidoes">
+                <span class="nome-arquivo"></span>
+
+                <div class="acoes-arquivo">
+                    <button type="button" class="btn-ver-arquivo">Ver</button>
+                    <button type="button" class="btn-remover-arquivo">Remover</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Documento: RG, CPF ou CNH dos noivos -->
+    <div class="item-documento">
+        <div class="status-documento">
+            <input type="checkbox" id="doc_rg_noivos" name="doc_rg_noivos" disabled>
+            <label for="doc_rg_noivos">RG, CPF ou CNH dos noivos</label>
+        </div>
+
+        <div class="area-anexo">
+            <label class="btn-anexo">
+                Anexar documento
+                <input type="file" multiple name="arquivo_rg_noivos" class="arquivo-documento" data-check="doc_rg_noivos">
+            </label>
+
+            <!-- Mostra o arquivo anexado e as ações disponíveis -->
+            <div class="arquivo-info oculto" data-info="arquivo_rg_noivos">
+                <span class="nome-arquivo"></span>
+
+                <div class="acoes-arquivo">
+                    <button type="button" class="btn-ver-arquivo">Ver</button>
+                    <button type="button" class="btn-remover-arquivo">Remover</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Documento: RG ou CNH das testemunhas -->
+    <div class="item-documento">
+        <div class="status-documento">
+            <input type="checkbox" id="doc_rg_testemunhas" name="doc_rg_testemunhas" disabled>
+            <label for="doc_rg_testemunhas">RG ou CNH das duas testemunhas</label>
+        </div>
+
+        <div class="area-anexo">
+            <label class="btn-anexo">
+                Anexar documento
+                <input type="file" multiple name="arquivo_rg_testemunhas" class="arquivo-documento" data-check="doc_rg_testemunhas">
+            </label>
+
+            <!-- Mostra o arquivo anexado e as ações disponíveis -->
+            <div class="arquivo-info oculto" data-info="arquivo_rg_testemunhas">
+                <span class="nome-arquivo"></span>
+
+                <div class="acoes-arquivo">
+                    <button type="button" class="btn-ver-arquivo">Ver</button>
+                    <button type="button" class="btn-remover-arquivo">Remover</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Documento: comprovante de residência -->
+    <div class="item-documento">
+        <div class="status-documento">
+            <input type="checkbox" id="doc_residencia" name="doc_residencia" disabled>
+            <label for="doc_residencia">Comprovante de residência</label>
+        </div>
+
+        <div class="area-anexo">
+            <label class="btn-anexo">
+                Anexar documento
+                <input type="file" multiple name="arquivo_residencia" class="arquivo-documento" data-check="doc_residencia">
+            </label>
+
+            <!-- Mostra o arquivo anexado e as ações disponíveis -->
+            <div class="arquivo-info oculto" data-info="arquivo_residencia">
+                <span class="nome-arquivo"></span>
+
+                <div class="acoes-arquivo">
+                    <button type="button" class="btn-ver-arquivo">Ver</button>
+                    <button type="button" class="btn-remover-arquivo">Remover</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Documento: pacto antenupcial -->
+    <div class="item-documento">
+        <div class="status-documento">
+            <input type="checkbox" id="doc_pacto" name="doc_pacto" disabled>
+            <label for="doc_pacto">Pacto antenupcial, se houver</label>
+        </div>
+
+        <div class="area-anexo">
+            <label class="btn-anexo">
+                Anexar documento
+                <input type="file" multiple name="arquivo_pacto" class="arquivo-documento" data-check="doc_pacto">
+            </label>
+
+            <!-- Mostra o arquivo anexado e as ações disponíveis -->
+            <div class="arquivo-info oculto" data-info="arquivo_pacto">
+                <span class="nome-arquivo"></span>
+
+                <div class="acoes-arquivo">
+                    <button type="button" class="btn-ver-arquivo">Ver</button>
+                    <button type="button" class="btn-remover-arquivo">Remover</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Documento: requerimento religioso -->
+    <div class="item-documento">
+        <div class="status-documento">
+            <input type="checkbox" id="doc_religioso" name="doc_religioso" disabled>
+            <label for="doc_religioso">Requerimento do casamento religioso com efeito civil, se houver</label>
+        </div>
+
+        <div class="area-anexo">
+            <label class="btn-anexo">
+                Anexar documento
+                <input type="file" multiple name="arquivo_religioso" class="arquivo-documento" data-check="doc_religioso">
+            </label>
+
+            <!-- Mostra o arquivo anexado e as ações disponíveis -->
+            <div class="arquivo-info oculto" data-info="arquivo_religioso">
+                <span class="nome-arquivo"></span>
+
+                <div class="acoes-arquivo">
+                    <button type="button" class="btn-ver-arquivo">Ver</button>
+                    <button type="button" class="btn-remover-arquivo">Remover</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mensagem explicando o envio do formulário -->
+<div class="aviso">
+    Ao finalizar, este formulário será enviado para a equipe de avaliação, e você receberá um número de protocolo através do e-mail cadastrado para acompanhar o pedido.
+</div>
+
+<!-- Resumo gerado automaticamente pelo JavaScript -->
+<div id="resumo" class="resumo"></div>

@@ -1,0 +1,692 @@
+/* Remove espaçamentos padrões e facilita o controle do layout */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Define as cores do tema padrão */
+:root {
+    --fundo: #eef5ee;
+    --card: #fbfdf8;
+    --texto: #1f2933;
+    --texto-suave: #5d6b78;
+    --principal: #244d35;
+    --principal-hover: #6f8f5f;
+    --borda: #d6dde3;
+    --campo: #ffffff;
+    --aviso: #e8f1e3;
+    --sombra: rgba(24, 57, 43, 0.14);
+    --botao-anexo-bg: #244d35;
+    --botao-anexo-hover: #6f8f5f;
+    --botao-anexo-texto: #ffffff;
+}
+
+/* Define as cores da versão de alto contraste */
+body.alto-contraste {
+    --fundo: #000000;
+    --card: #111111;
+    --texto: #ffffff;
+    --texto-suave: #ffffff;
+    --principal: #b7ff4a;
+    --principal-hover: #9ee63a;
+    --borda: #ffffff;
+    --campo: #000000;
+    --aviso: #1f1f1f;
+    --sombra: rgba(255, 255, 255, 0.18);
+    --botao-anexo-bg: #b7ff4a;
+    --botao-anexo-hover: #9ee63a;
+    --botao-anexo-texto: #000000;
+}
+
+/* Estiliza o fundo geral da página */
+body {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at top left, rgba(111, 143, 95, 0.24), transparent 32%),
+        var(--fundo);
+    color: var(--texto);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Centraliza o formulário na tela */
+.pagina {
+    width: 100%;
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+}
+
+/* Caixa principal do formulário */
+.form-box {
+    width: 100%;
+    max-width: 1120px;
+    background: var(--card);
+    border: 1px solid var(--borda);
+    border-radius: 22px;
+    box-shadow: 0 20px 45px var(--sombra);
+    padding: 34px;
+}
+
+/* Organiza o título e o botão de contraste */
+.topo {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 28px;
+}
+
+.tag {
+    display: inline-block;
+    margin-bottom: 10px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: var(--aviso);
+    color: var(--texto);
+    font-size: 13px;
+}
+
+h1 {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+h2 {
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+h3 {
+    margin-top: 24px;
+    margin-bottom: 14px;
+    font-size: 18px;
+}
+
+p,
+.descricao {
+    color: var(--texto-suave);
+    line-height: 1.5;
+}
+
+/* Área da barra de progresso */
+.progresso-area {
+    margin-bottom: 28px;
+}
+
+.progresso-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: var(--texto-suave);
+}
+
+.barra {
+    width: 100%;
+    height: 10px;
+    background: var(--aviso);
+    border-radius: 999px;
+    overflow: hidden;
+    border: 1px solid var(--borda);
+}
+
+#barraProgresso {
+    width: 0;
+    height: 100%;
+    background: var(--principal);
+    transition: width 0.3s ease;
+}
+
+#conteudoEtapa {
+    animation: aparecer 0.25s ease;
+}
+
+@keyframes aparecer {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Organiza os campos em duas colunas */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 18px;
+    margin-top: 16px;
+}
+
+/* Organiza label e input em coluna */
+.campo {
+    display: flex;
+    flex-direction: column;
+}
+
+.campo-grande {
+    grid-column: span 2;
+}
+
+label {
+    margin-bottom: 6px;
+    font-size: 14px;
+    color: var(--texto);
+    font-weight: 600;
+}
+
+/* Estiliza campos de texto, seleção e textarea */
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 13px 12px;
+    border: 1px solid var(--borda);
+    border-radius: 12px;
+    background: var(--campo);
+    color: var(--texto);
+    font-size: 15px;
+    outline: none;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 90px;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--principal);
+    box-shadow: 0 0 0 3px rgba(127, 148, 107, 0.2);
+}
+
+body.alto-contraste input:focus,
+body.alto-contraste select:focus,
+body.alto-contraste textarea:focus {
+    box-shadow: 0 0 0 3px #ffff00;
+}
+
+input[readonly] {
+    opacity: 0.75;
+    cursor: not-allowed;
+}
+
+/* Estiliza avisos, campos condicionais e resumo */
+.aviso,
+.box-condicional,
+.resumo {
+    margin-top: 18px;
+    padding: 16px;
+    border-radius: 16px;
+    border: 1px solid var(--borda);
+    background: var(--aviso);
+    color: var(--texto);
+    line-height: 1.5;
+}
+
+/* Organiza a lista de documentos */
+.checklist {
+    display: grid;
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.checklist label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    border: 1px solid var(--borda);
+    border-radius: 12px;
+    background: var(--campo);
+    cursor: pointer;
+}
+
+.checklist input {
+    width: auto;
+}
+
+/* Organiza os botões de navegação */
+.botoes {
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+/* Estiliza os botões principais */
+button {
+    border: none;
+    border-radius: 12px;
+    padding: 13px 22px;
+    background: var(--principal);
+    color: var(--card);
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+button:hover {
+    background: var(--principal-hover);
+    transform: translateY(-1px);
+}
+
+body.alto-contraste button {
+    color: #000000;
+}
+
+/* Estiliza botões secundários e contraste */
+.btn-secundario,
+.btn-contraste {
+    background: transparent;
+    color: var(--texto);
+    border: 1px solid var(--borda);
+}
+
+.btn-secundario:hover,
+.btn-contraste:hover {
+    background: var(--aviso);
+}
+
+body.alto-contraste .btn-secundario,
+body.alto-contraste .btn-contraste {
+    color: #ffffff;
+}
+
+/* Esconde elementos que não devem aparecer no momento */
+.oculto {
+    display: none !important;
+}
+
+/* Destaca campos com erro de validação */
+.erro {
+    border-color: #b00020 !important;
+}
+
+.mensagem-erro {
+    margin-top: 8px;
+    color: #b00020;
+    font-size: 13px;
+}
+
+body.alto-contraste .mensagem-erro {
+    color: #ff8080;
+}
+
+.resumo h3 {
+    margin-top: 0;
+}
+
+.resumo ul {
+    padding-left: 18px;
+    margin-top: 10px;
+}
+
+.resumo li {
+    margin-bottom: 8px;
+}
+
+/* Ajusta o layout para telas menores */
+@media (max-width: 760px) {
+    .form-box {
+        padding: 22px;
+        border-radius: 18px;
+    }
+
+    .topo {
+        flex-direction: column;
+    }
+
+    h1 {
+        font-size: 26px;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .campo-grande {
+        grid-column: span 1;
+    }
+
+    .botoes {
+        flex-direction: column-reverse;
+    }
+
+    button {
+        width: 100%;
+    }
+}
+
+
+/* Organiza cada documento com status e botão de anexo */
+.item-documento {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 12px;
+    border: 1px solid var(--borda);
+    border-radius: 12px;
+    background: var(--campo);
+}
+
+/* Organiza o checkbox visual e o nome do documento */
+.status-documento {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Impede interação manual no checklist */
+.status-documento input {
+    width: auto;
+    pointer-events: none;
+}
+
+/* Remove o estilo antigo de label aplicado ao checklist simples */
+.checklist-anexos label {
+    margin-bottom: 0;
+}
+
+/* Estiliza o botão usado para selecionar arquivo */
+.btn-anexo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 160px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: var(--principal);
+    color: var(--card);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+/* Efeito visual ao passar o mouse no botão de anexo */
+.btn-anexo:hover {
+    background: var(--principal-hover);
+    transform: translateY(-1px);
+}
+
+/* Esconde o input original de arquivo */
+.btn-anexo input {
+    display: none;
+}
+
+/* Mantém o texto do botão legível no alto contraste */
+body.alto-contraste .btn-anexo {
+    color: #000000;
+}
+
+/* Ajusta os anexos em telas pequenas */
+@media (max-width: 760px) {
+    .item-documento {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .btn-anexo {
+        width: 100%;
+    }
+}
+
+
+/* Corrige a cor do botão de anexar documento nos dois temas */
+.checklist-anexos .btn-anexo {
+    background: var(--botao-anexo-bg);
+    color: var(--botao-anexo-texto);
+    border: 1px solid var(--botao-anexo-bg);
+}
+
+/* Mantém o botão de anexo visível ao passar o mouse */
+.checklist-anexos .btn-anexo:hover {
+    background: var(--botao-anexo-hover);
+    color: var(--botao-anexo-texto);
+}
+
+/* Garante que o botão de anexo não herde o fundo escuro dos itens */
+.checklist .item-documento .btn-anexo {
+    background: var(--botao-anexo-bg);
+    color: var(--botao-anexo-texto);
+}
+
+/* Ajusta o botão de tema para exibir somente o ícone */
+.btn-tema {
+    width: 56px;
+    height: 56px;
+    padding: 0;
+    border-radius: 12px;
+    border: 1px solid var(--borda);
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Remove efeitos exagerados do botão de tema */
+.btn-tema:hover {
+    background: #f2f2f2;
+    transform: none;
+}
+
+/* Define o tamanho do ícone dentro do botão */
+.btn-tema img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    display: block;
+}
+
+/* Tema claro: mantém o ícone original visível */
+body:not(.alto-contraste) .btn-tema img {
+    filter: none;
+}
+
+/* Alto contraste: botão escuro com borda branca */
+body.alto-contraste .btn-tema {
+    background: #111111;
+    border: 1px solid #ffffff;
+}
+
+/* Alto contraste: transforma o ícone em branco */
+body.alto-contraste .btn-tema img {
+    filter: invert(1);
+}
+
+/* Alto contraste: mantém o hover visível */
+body.alto-contraste .btn-tema:hover {
+    background: #222222;
+}
+
+/* Organiza a área do botão de anexo e das ações do arquivo */
+.area-anexo {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* Mostra o nome do arquivo anexado */
+.arquivo-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* Estiliza o nome do arquivo anexado */
+.nome-arquivo {
+    max-width: 220px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    background: var(--aviso);
+    color: var(--texto);
+    border: 1px solid var(--borda);
+    font-size: 13px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* Organiza os botões de ver e remover arquivo */
+.acoes-arquivo {
+    display: flex;
+    gap: 8px;
+}
+
+/* Botões menores usados nos arquivos anexados */
+.btn-ver-arquivo,
+.btn-remover-arquivo {
+    width: auto;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+}
+
+/* Botão para visualizar arquivo */
+.btn-ver-arquivo {
+    background: var(--botao-anexo-bg);
+    color: var(--botao-anexo-texto);
+    border: 1px solid var(--botao-anexo-bg);
+}
+
+/* Botão para remover arquivo */
+.btn-remover-arquivo {
+    background: transparent;
+    color: var(--texto);
+    border: 1px solid var(--borda);
+}
+
+/* Hover do botão visualizar */
+.btn-ver-arquivo:hover {
+    background: var(--botao-anexo-hover);
+    color: var(--botao-anexo-texto);
+}
+
+/* Hover do botão remover */
+.btn-remover-arquivo:hover {
+    background: var(--aviso);
+    color: var(--texto);
+}
+
+/* Mantém os botões legíveis no alto contraste */
+body.alto-contraste .btn-ver-arquivo {
+    color: #000000;
+}
+
+body.alto-contraste .btn-remover-arquivo {
+    color: #ffffff;
+    border: 1px solid #ffffff;
+}
+
+/* Ajusta os anexos em telas pequenas */
+@media (max-width: 760px) {
+    .area-anexo {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .arquivo-info {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .nome-arquivo {
+        max-width: 100%;
+    }
+
+    .acoes-arquivo {
+        width: 100%;
+    }
+
+    .btn-ver-arquivo,
+    .btn-remover-arquivo {
+        width: 100%;
+    }
+}
+/* Mensagens exibidas abaixo do CEP após consulta à API */
+.mensagem-cep {
+    margin-top: 8px;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.mensagem-cep-carregando {
+    color: var(--texto-suave);
+}
+
+.mensagem-cep-sucesso {
+    color: #244d35;
+}
+
+.mensagem-cep-erro {
+    color: #b00020;
+}
+
+body.alto-contraste .mensagem-cep-sucesso {
+    color: #b7ff4a;
+}
+
+body.alto-contraste .mensagem-cep-erro {
+    color: #ff8080;
+}
+
+
+/* Links superiores do formulário */
+.links-topo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 14px;
+}
+
+.links-topo a {
+    color: var(--principal);
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.links-topo a:hover {
+    text-decoration: underline;
+}
+
+/* Mensagem geral do formulário */
+.mensagem-formulario {
+    margin-top: 24px;
+}
+
+.mensagem-formulario.sucesso {
+    border-color: rgba(36, 122, 61, 0.45);
+    background: rgba(36, 122, 61, 0.10);
+    color: #244d35;
+}
+
+.mensagem-formulario.erro {
+    border-color: rgba(176, 0, 32, 0.35);
+    background: rgba(176, 0, 32, 0.08);
+    color: #b00020;
+}
+
+.erro-documento {
+    border-color: #b00020 !important;
+}
+
+body.alto-contraste .mensagem-formulario.sucesso {
+    color: #b7ff4a;
+}
+
+body.alto-contraste .mensagem-formulario.erro {
+    color: #ff8080;
+}

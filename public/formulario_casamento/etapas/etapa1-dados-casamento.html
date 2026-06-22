@@ -1,0 +1,43 @@
+<!-- Bloco com os dados iniciais da cerimônia -->
+<h2>Dados do casamento</h2>
+<p class="descricao">Informações iniciais sobre a cerimônia.</p>
+
+<!-- Campos principais sobre data, tipo, regime e local -->
+<div class="grid">
+    <div class="campo">
+        <label for="data_casamento">Data provável do casamento</label>
+        <input type="date" id="data_casamento" name="data_casamento">
+    </div>
+
+    <div class="campo">
+        <label for="tipo_cerimonia">Tipo de cerimônia</label>
+        <select id="tipo_cerimonia" name="tipo_cerimonia">
+            <option value="">Selecione</option>
+            <option>Cartório</option>
+            <option>Diligência / Salão</option>
+            <option>Religioso com efeito civil</option>
+            <option>Conversão de união estável em casamento</option>
+        </select>
+    </div>
+
+    <div class="campo">
+        <label for="regime_bens">Regime de bens</label>
+        <select id="regime_bens" name="regime_bens">
+            <option value="">Selecione</option>
+            <option>Comunhão parcial de bens</option>
+            <option>Comunhão universal de bens</option>
+            <option>Separação total de bens</option>
+            <option>Participação final dos aquestos</option>
+        </select>
+    </div>
+
+    <div class="campo">
+        <label for="local_cerimonia">Local da cerimônia</label>
+        <input type="text" id="local_cerimonia" name="local_cerimonia" placeholder="Cartório, salão, igreja, residência...">
+    </div>
+</div>
+
+<!-- Aviso sobre regra do regime de bens -->
+<div class="aviso">
+    <strong>Atenção:</strong> a comunhão parcial é o regime automático. Para outros regimes, normalmente é necessário pacto antenupcial.
+</div>
