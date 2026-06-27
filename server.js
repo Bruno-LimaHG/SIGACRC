@@ -22,9 +22,13 @@ const PORT = process.env.PORT || 3000;
 const PUBLIC_DIR = path.join(__dirname, "public");
 
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID || "943014478378-edc20egje94rlrbq4m8fsetmtdm03qlo.apps.googleusercontent.com");
-const codigosRecuperacao = new Map(); // Para armazenar códigos de recuperação temporários
+const Recuperacao = require("./models/Recuperacao");
 
-const JWT_SECRET = process.env.JWT_SECRET || "chave_super_secreta_para_desenvolvimento";
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+    console.error("ERRO FATAL: JWT_SECRET não está definido no .env");
+    process.exit(1);
+}
 
 // Limite de requisições para evitar Força Bruta
 const authLimiter = rateLimit({
@@ -33,6 +37,8 @@ const authLimiter = rateLimit({
     message: { erro: "Muitas tentativas. Tente novamente mais tarde." }
 });
 
+const helmet = require('helmet');
+app.use(helmet());
 app.use(cors({ origin: "*" })); // Em produção na VM da AWS, trocar '*' pela URL do seu front-end
 app.use(express.json({ limit: "25mb" }));
 app.use(express.static(PUBLIC_DIR));
@@ -355,7 +361,7 @@ app.post("/api/auth/esqueci-senha", authLimiter, async (req, res) => {
         if (!usuario) return res.status(404).json({ erro: "E-mail não encontrado" });
 
         const codigo = Math.floor(100000 + Math.random() * 900000).toString();
-        codigosRecuperacao.set(email, codigo);
+        await Recuperacao.create({ email, codigo });
 
         // Enviar e-mail
         // Tenta usar ethereal.email para testes, ou credenciais reais se existirem
@@ -364,7 +370,7 @@ app.post("/api/auth/esqueci-senha", authLimiter, async (req, res) => {
             port: process.env.EMAIL_PORT || 587,
             auth: {
                 user: process.env.EMAIL_USER || 'johathan.nicolas@ethereal.email',
-                pass: process.env.EMAIL_PASS || 'TbzG5mKsV5xKsWb4Fj'
+                pass: process.env.EMAIL_PASS
             }
         });
         
@@ -392,13 +398,13 @@ app.post("/api/auth/redefinir-senha", async (req, res) => {
         const { email, codigo, novaSenha } = req.body;
         if (!email || !codigo || !novaSenha) return res.status(400).json({ erro: "Dados incompletos" });
         
-        const codigoArmazenado = codigosRecuperacao.get(email);
-        if (!codigoArmazenado || codigoArmazenado !== codigo) {
+        const recuperacao = await Recuperacao.findOne({ email, codigo });
+        if (!recuperacao) {
             return res.status(401).json({ erro: "Código inválido ou expirado" });
         }
         
         await usuariosDb.atualizarSenha(email, novaSenha);
-        codigosRecuperacao.delete(email);
+        await Recuperacao.deleteOne({ _id: recuperacao._id });
         
         res.json({ mensagem: "Senha redefinida com sucesso" });
     } catch (error) {
