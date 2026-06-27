@@ -18,5 +18,5 @@ btnEntrarPainel.addEventListener("click", () => {
         acessoEm: new Date().toISOString()
     });
 
-    window.location.href = "../painel_escrevente/painel_escrevente.html";
+    window.location.href = "/painel-funcionario";
 });

@@ -44,7 +44,7 @@ formLogin.addEventListener("submit", async (event) => {
                 token: dados.token,
                 acessoEm: new Date().toISOString()
             });
-            window.location.href = "../painel_escrevente/painel_escrevente.html";
+            window.location.href = "/painel-funcionario";
         } else {
             mensagemErro.textContent = dados.erro || "Credenciais inválidas.";
             mensagemErro.classList.remove("oculto");

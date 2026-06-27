@@ -3,7 +3,7 @@ const cliente = SIGACRC.clienteLogado();
 if (!cliente) {
     sessionStorage.setItem("avisoLoginSIGACRC", "Para acessar a Área do Cliente, faça login ou crie seu cadastro. Assim seus pedidos, protocolos e mensagens ficam vinculados ao seu usuário.");
     sessionStorage.setItem("destinoAposLoginSIGACRC", window.location.href);
-    window.location.replace("../login_clientes/login_clientes.html?aviso=area-cliente");
+    window.location.replace("/login?aviso=area-cliente");
 } else {
 const tituloCliente = document.getElementById("tituloCliente");
 const listaPedidosCliente = document.getElementById("listaPedidosCliente");
@@ -213,7 +213,7 @@ modalAtendimentoCliente.addEventListener("click", (event) => {
 
 btnSair.addEventListener("click", () => {
     SIGACRC.limparClienteLogado();
-    window.location.href = "../login_clientes/login_clientes.html";
+    window.location.href = "/login";
 });
 
 renderizarPedidos();

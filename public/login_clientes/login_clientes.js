@@ -13,7 +13,7 @@ function exibirPopupLoginObrigatorio(texto) {
             <p>${texto}</p>
             <div class="form-acoes">
                 <button type="button" id="btnEntendiLogin">Entendi</button>
-                <a class="btn btn-secundario" href="../cadastro_clientes/cadastro_clientes.html">Criar cadastro</a>
+                <a class="btn btn-secundario" href="/cadastro">Criar cadastro</a>
             </div>
         </div>
     `;
@@ -88,7 +88,7 @@ formLoginCliente.addEventListener("submit", async (event) => {
         setTimeout(() => {
             const destino = sessionStorage.getItem("destinoAposLoginSIGACRC");
             sessionStorage.removeItem("destinoAposLoginSIGACRC");
-            window.location.href = destino || "../area_cliente/area_cliente.html";
+            window.location.href = destino || "/area-cliente";
         }, 700);
 
     } catch (error) {
@@ -128,7 +128,7 @@ async function handleCredentialResponse(response) {
         mostrarMensagemLogin("Login com Google realizado com sucesso. Redirecionando...", "sucesso");
 
         setTimeout(() => {
-            window.location.href = "../area_cliente/area_cliente.html";
+            window.location.href = "/area-cliente";
         }, 700);
     } catch (error) {
         console.error(error);

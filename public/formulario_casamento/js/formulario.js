@@ -8,7 +8,7 @@ const clienteLogadoFormulario = SIGACRC.clienteLogado();
 if (!clienteLogadoFormulario) {
     sessionStorage.setItem("avisoLoginSIGACRC", "Para iniciar um novo pedido de casamento civil, faça login na Área do Cliente ou crie seu cadastro.");
     sessionStorage.setItem("destinoAposLoginSIGACRC", window.location.href);
-    window.location.replace("../login_clientes/login_clientes.html?aviso=formulario");
+    window.location.replace("/login?aviso=formulario");
     throw new Error("Login do cliente obrigatório para acessar o formulário.");
 }
 

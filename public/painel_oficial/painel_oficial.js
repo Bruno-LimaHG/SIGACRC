@@ -298,7 +298,7 @@ if (btnProximaPagina) {
 
 btnSairOficial.addEventListener("click", () => {
     SIGACRC.limparEscreventeLogado(); 
-    window.location.href = "../tela_inicial/tela_inicial.html";
+    window.location.href = "/";
 });
 
 // Alterar Minha Senha (Oficial)

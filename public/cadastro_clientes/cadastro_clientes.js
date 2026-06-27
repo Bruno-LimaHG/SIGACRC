@@ -84,12 +84,12 @@ formCadastro.addEventListener("submit", async (event) => {
                         token: authData.token,
                         acessoEm: new Date().toISOString()
                     });
-                    setTimeout(() => window.location.href = "../area_cliente/area_cliente.html", 1000);
+                    setTimeout(() => window.location.href = "/area-cliente", 1000);
                     return;
                 }
             } catch (ignore) {}
             
-            setTimeout(() => window.location.href = "../login_clientes/login_clientes.html", 1500);
+            setTimeout(() => window.location.href = "/login", 1500);
         } else {
             mostrarMensagemCadastro(data.erro || "Erro ao criar conta.", "erro");
             btnSubmit.disabled = false;
