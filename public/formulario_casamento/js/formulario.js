@@ -225,8 +225,12 @@ form.addEventListener("submit", async (event) => {
                 window.location.href = "../protocolo/protocolo.html";
             }, 900);
         } else {
-            const err = await response.json();
-            exibirMensagemFormulario(`Erro ao enviar pedido: ${err.erro || 'Falha no servidor'}`, "erro");
+            const err = await response.json().catch(() => ({}));
+            if (response.status === 401 || response.status === 403) {
+                exibirMensagemFormulario("Sua sessão expirou. Por favor, faça login novamente na aba ao lado ou recarregue a página após logar para enviar seu pedido (seus dados preenchidos continuarão na tela).", "erro");
+            } else {
+                exibirMensagemFormulario(`Erro ao enviar pedido: ${err.erro || 'Falha no servidor'}`, "erro");
+            }
         }
     } catch (error) {
         exibirMensagemFormulario("Erro de conexão com o servidor.", "erro");
@@ -280,6 +284,27 @@ async function validarEtapaAtual() {
     return valido && cepsValidos;
 }
 
+function validarCPFReal(cpfStr) {
+    let cpf = cpfStr.replace(/\D/g, '');
+    if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
+    let soma = 0, resto;
+    for (let i = 1; i <= 9; i++) soma += parseInt(cpf.substring(i-1, i)) * (11 - i);
+    resto = (soma * 10) % 11;
+    if (resto === 10 || resto === 11) resto = 0;
+    if (resto !== parseInt(cpf.substring(9, 10))) return false;
+    soma = 0;
+    for (let i = 1; i <= 10; i++) soma += parseInt(cpf.substring(i-1, i)) * (12 - i);
+    resto = (soma * 10) % 11;
+    if (resto === 10 || resto === 11) resto = 0;
+    if (resto !== parseInt(cpf.substring(10, 11))) return false;
+    return true;
+}
+
+function criarDataLocalSegura(dataString) {
+    const [ano, mes, dia] = dataString.split("-");
+    return new Date(parseInt(ano, 10), parseInt(mes, 10) - 1, parseInt(dia, 10));
+}
+
 function validarCamposEspecificos() {
     let valido = true;
 
@@ -291,8 +316,8 @@ function validarCamposEspecificos() {
     });
 
     conteudoEtapa.querySelectorAll(".cpf").forEach((campo) => {
-        if (campo.value && campo.value.replace(/\D/g, "").length !== 11) {
-            mostrarErro(campo, "Informe um CPF com 11 números.");
+        if (campo.value && !validarCPFReal(campo.value)) {
+            mostrarErro(campo, "Informe um CPF válido.");
             valido = false;
         }
     });
@@ -326,7 +351,7 @@ function validarCamposEspecificos() {
     if (dataCasamento?.value) {
         const hoje = new Date();
         hoje.setHours(0, 0, 0, 0);
-        const dataInformada = new Date(`${dataCasamento.value}T00:00:00`);
+        const dataInformada = criarDataLocalSegura(dataCasamento.value);
 
         if (dataInformada < hoje) {
             mostrarErro(dataCasamento, "A data provável não pode ser anterior à data atual.");
@@ -515,6 +540,10 @@ async function consultarCEP(campo, forcarConsulta = false) {
         const resposta = await fetch(`${API_CEP_URL}/${cep}`);
         const dadosCEP = await resposta.json();
 
+        if (resposta.status === 403) {
+            throw new Error(dadosCEP.erro || "Apenas endereços de Osasco/SP são aceitos por este cartório.");
+        }
+
         if (!resposta.ok) {
             throw new Error(dadosCEP.erro || "CEP não validado pela API.");
         }
@@ -611,7 +640,8 @@ function configurarCalculoDeIdade() {
 
 function calcularIdade(dataNascimento) {
     const hoje = new Date();
-    const nascimento = new Date(`${dataNascimento}T00:00:00`);
+    const [ano, mes, dia] = dataNascimento.split("-");
+    const nascimento = new Date(parseInt(ano, 10), parseInt(mes, 10) - 1, parseInt(dia, 10));
 
     let idade = hoje.getFullYear() - nascimento.getFullYear();
     const mes = hoje.getMonth() - nascimento.getMonth();
@@ -681,15 +711,19 @@ function configurarAnexosDocumentos() {
                     URL.revokeObjectURL(dadosFormulario[inputArquivo.name].url);
                 }
 
-                dadosFormulario[inputArquivo.name] = {
-                    nome: arquivo.name,
-                    tipo: arquivo.type,
-                    tamanho: arquivo.size,
-                    url: URL.createObjectURL(arquivo)
+                const leitor = new FileReader();
+                leitor.onload = (e) => {
+                    dadosFormulario[inputArquivo.name] = {
+                        nome: arquivo.name,
+                        tipo: arquivo.type,
+                        tamanho: arquivo.size,
+                        url: URL.createObjectURL(arquivo),
+                        dados: e.target.result
+                    };
+                    dadosFormulario[checkbox.name] = true;
+                    atualizarVisualArquivo();
                 };
-
-                dadosFormulario[checkbox.name] = true;
-                atualizarVisualArquivo();
+                leitor.readAsDataURL(arquivo);
             }
         });
 
@@ -794,11 +828,26 @@ function montarDadosLimpos() {
     return dadosLimpos;
 }
 
+function montarAnexosBase64ParaPedido() {
+    const anexos = [];
+    Object.keys(dadosFormulario).forEach((chave) => {
+        if (chave.startsWith("arquivo_") && dadosFormulario[chave]?.dados) {
+            anexos.push({
+                id: chave,
+                rotulo: chave.replace("arquivo_", "Documento: "),
+                nome: dadosFormulario[chave].nome,
+                dados: dadosFormulario[chave].dados
+            });
+        }
+    });
+    return anexos;
+}
+
 function montarPedidoParaEnvio() {
     const cliente = SIGACRC.clienteLogado() || {
         nome: dadosFormulario.nome_contraente1 || "Cliente não identificado",
         email: dadosFormulario.email_contraente1 || "",
-        cpf: dadosFormulario.cpf_contraente1 || ""
+        cpf: dadosFormulario.cpf_contraente1 ? dadosFormulario.cpf_contraente1.replace(/\D/g, "") : ""
     };
 
     const protocolo = SIGACRC.gerarProtocolo();
@@ -818,6 +867,7 @@ function montarPedidoParaEnvio() {
         },
         dados: montarDadosLimpos(),
         documentos: montarListaDocumentosParaPedido(),
+        documentosAnexos: montarAnexosBase64ParaPedido(),
         observacaoEscrevente: "",
         historico: [
             {

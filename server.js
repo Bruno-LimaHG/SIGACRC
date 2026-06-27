@@ -65,9 +65,20 @@ function formatarData(iso) {
     return `${dia}/${mes}/${ano}`;
 }
 
-app.get("/", (req, res) => {
-    res.redirect("/tela_inicial/tela_inicial.html");
-});
+// Rotas Limpas (Clean URLs)
+app.get("/", (req, res) => res.sendFile(path.join(PUBLIC_DIR, "tela_inicial", "tela_inicial.html")));
+app.get("/cadastro", (req, res) => res.sendFile(path.join(PUBLIC_DIR, "cadastro_clientes", "cadastro_clientes.html")));
+app.get("/login", (req, res) => res.sendFile(path.join(PUBLIC_DIR, "login_clientes", "login_clientes.html")));
+app.get("/login-funcionarios", (req, res) => res.sendFile(path.join(PUBLIC_DIR, "login_escreventes", "login_escreventes.html")));
+app.get("/login-oficial", (req, res) => res.sendFile(path.join(PUBLIC_DIR, "login_oficial", "login_oficial.html")));
+app.get("/painel", (req, res) => res.sendFile(path.join(PUBLIC_DIR, "painel", "painel.html")));
+app.get("/painel-funcionario", (req, res) => res.sendFile(path.join(PUBLIC_DIR, "painel_escrevente", "painel_escrevente.html")));
+app.get("/painel-oficial", (req, res) => res.sendFile(path.join(PUBLIC_DIR, "painel_oficial", "painel_oficial.html")));
+app.get("/area-cliente", (req, res) => res.sendFile(path.join(PUBLIC_DIR, "area_cliente", "area_cliente.html")));
+app.get("/formulario", (req, res) => res.sendFile(path.join(PUBLIC_DIR, "formulario_casamento", "formulario_casamento.html")));
+app.get("/acompanhamento", (req, res) => res.sendFile(path.join(PUBLIC_DIR, "acompanhamento", "acompanhamento.html")));
+app.get("/protocolo", (req, res) => res.sendFile(path.join(PUBLIC_DIR, "protocolo", "protocolo.html")));
+app.get("/central-ajuda", (req, res) => res.sendFile(path.join(PUBLIC_DIR, "central_ajuda", "central_ajuda.html")));
 
 // API DE CEP
 app.get("/cep/:cep", async (req, res) => {

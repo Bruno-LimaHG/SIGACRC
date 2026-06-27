@@ -80,6 +80,27 @@ button:hover,
     text-decoration: none;
 }
 
+button:focus-visible,
+.btn:focus-visible {
+    outline: 3px solid var(--azul-claro);
+    outline-offset: 2px;
+}
+
+.btn-destaque {
+    background: var(--azul);
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(24, 57, 43, 0.4);
+    transform: scale(1.02);
+}
+
+.btn-destaque:hover,
+.btn-destaque:focus-visible {
+    background: var(--azul-claro);
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 6px 20px rgba(24, 57, 43, 0.5);
+    color: #ffffff;
+}
+
 .btn-secundario {
     background: transparent;
     color: var(--texto);
@@ -239,7 +260,10 @@ p {
 }
 
 .card {
-    padding: 24px;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .card p,
