@@ -1,5 +1,5 @@
 if (!sessionStorage.getItem("sigacrc_funcionario")) {
-    window.location.href = "../login_escreventes/login_escreventes.html";
+    window.location.href = "/login-funcionarios";
 }
 
 let pedidos = [];

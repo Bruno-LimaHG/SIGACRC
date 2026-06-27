@@ -447,7 +447,7 @@ modalAtendimentoFuncionario.addEventListener("click", (event) => {
 
 btnSairFuncionario.addEventListener("click", () => {
     SIGACRC.limparEscreventeLogado();
-    window.location.href = "../login_escreventes/login_escreventes.html";
+    window.location.href = "/login-funcionarios";
 });
 
 // Iniciando chamadas do painel (API)

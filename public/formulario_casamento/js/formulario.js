@@ -13,14 +13,14 @@ if (!clienteLogadoFormulario) {
 }
 
 const etapas = [
-    "etapas/etapa1-dados-casamento.html",
-    "etapas/etapa2-primeiro-contraente.html",
-    "etapas/etapa3-pais-primeiro-contraente.html",
-    "etapas/etapa4-segundo-contraente.html",
-    "etapas/etapa5-pais-segundo-contraente.html",
-    "etapas/etapa6-sobrenome.html",
-    "etapas/etapa7-testemunhas.html",
-    "etapas/etapa8-documentos-revisao.html"
+    "/formulario_casamento/etapas/etapa1-dados-casamento.html",
+    "/formulario_casamento/etapas/etapa2-primeiro-contraente.html",
+    "/formulario_casamento/etapas/etapa3-pais-primeiro-contraente.html",
+    "/formulario_casamento/etapas/etapa4-segundo-contraente.html",
+    "/formulario_casamento/etapas/etapa5-pais-segundo-contraente.html",
+    "/formulario_casamento/etapas/etapa6-sobrenome.html",
+    "/formulario_casamento/etapas/etapa7-testemunhas.html",
+    "/formulario_casamento/etapas/etapa8-documentos-revisao.html"
 ];
 
 const camposObrigatoriosPorEtapa = {
@@ -222,7 +222,7 @@ form.addEventListener("submit", async (event) => {
             exibirMensagemFormulario(`Pedido enviado com sucesso. Protocolo gerado: ${result.id || pedido.protocolo}`, "sucesso");
 
             setTimeout(() => {
-                window.location.href = "../protocolo/protocolo.html";
+                window.location.href = "/protocolo";
             }, 900);
         } else {
             const err = await response.json().catch(() => ({}));
@@ -908,10 +908,10 @@ async function inicializarFormulario() {
 
     if (editar) {
         try {
-            const resposta = await fetch(`/api/pedidos`);
-            const pedidos = await resposta.json();
-            const p = pedidos.find(x => x.id === editar);
-            if (p) {
+            const resposta = await fetch(`/api/pedidos/${editar}`);
+            if (resposta.ok) {
+                const p = await resposta.json();
+                if (p) {
                 if (p.dadosCompletos) {
                     dadosFormulario = { ...p.dadosCompletos };
                 } else {
