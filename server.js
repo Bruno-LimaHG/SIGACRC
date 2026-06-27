@@ -34,6 +34,7 @@ if (!JWT_SECRET) {
 const authLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutos
     max: 10, // 10 tentativas de login/esqueci-senha por IP
+    validate: { xForwardedForHeader: false },
     message: { erro: "Muitas tentativas. Tente novamente mais tarde." }
 });
 
