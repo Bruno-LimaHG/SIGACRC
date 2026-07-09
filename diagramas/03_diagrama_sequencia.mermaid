@@ -1,0 +1,58 @@
+sequenceDiagram
+    actor Cliente
+    participant Frontend
+    participant Backend
+    participant S3 as AWS S3
+    participant DB as MongoDB
+    actor Escrevente
+
+    Cliente->>Frontend: Preenche formulário (8 etapas)
+    Cliente->>Frontend: Anexa documentos
+    Frontend->>Frontend: Converte arquivos em Base64
+    Cliente->>Frontend: Envia pedido
+
+    Frontend->>Backend: POST /pedidos (dados + anexos Base64)
+    activate Backend
+
+    Backend->>S3: Upload dos documentos
+    activate S3
+    S3-->>Backend: URLs dos arquivos
+    deactivate S3
+
+    Backend->>DB: Salva Pedido (status = Pendente, URLs S3)
+    activate DB
+    DB-->>Backend: Confirmação + protocolo (id)
+    deactivate DB
+
+    Backend-->>Frontend: 201 Created (protocolo)
+    deactivate Backend
+    Frontend-->>Cliente: Exibe número de protocolo
+
+    Note over Escrevente,DB: Fase de análise
+
+    Escrevente->>Frontend: Login na Área Interna
+    Escrevente->>Backend: GET /pedidos?status=Pendente
+    activate Backend
+    Backend->>DB: Consulta pedidos pendentes
+    DB-->>Backend: Lista de pedidos
+    Backend-->>Escrevente: Retorna lista
+    deactivate Backend
+
+    Escrevente->>Backend: PATCH /pedidos/:id (assumir)
+    activate Backend
+    Backend->>DB: Atualiza status = EmAnalise
+    DB-->>Backend: OK
+    Backend-->>Escrevente: Pedido em análise
+    deactivate Backend
+
+    Escrevente->>Backend: Analisa documentação anexada
+
+    alt Documentação incompleta
+        Escrevente->>Backend: PATCH status = ExigenciaDocumental
+        Backend->>DB: Atualiza status
+        Backend-->>Cliente: Notifica exigência documental
+    else Documentação aprovada
+        Escrevente->>Backend: PATCH status = Aprovado
+        Backend->>DB: Atualiza status
+        Backend-->>Cliente: Notifica aprovação
+    end

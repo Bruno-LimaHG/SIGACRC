@@ -644,9 +644,9 @@ function calcularIdade(dataNascimento) {
     const nascimento = new Date(parseInt(ano, 10), parseInt(mes, 10) - 1, parseInt(dia, 10));
 
     let idade = hoje.getFullYear() - nascimento.getFullYear();
-    const mes = hoje.getMonth() - nascimento.getMonth();
+    const mesDiff = hoje.getMonth() - nascimento.getMonth();
 
-    if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) {
+    if (mesDiff < 0 || (mesDiff === 0 && hoje.getDate() < nascimento.getDate())) {
         idade--;
     }
 
@@ -836,6 +836,7 @@ function montarAnexosBase64ParaPedido() {
                 id: chave,
                 rotulo: chave.replace("arquivo_", "Documento: "),
                 nome: dadosFormulario[chave].nome,
+                tipo: dadosFormulario[chave].tipo,
                 dados: dadosFormulario[chave].dados
             });
         }
@@ -912,19 +913,20 @@ async function inicializarFormulario() {
             if (resposta.ok) {
                 const p = await resposta.json();
                 if (p) {
-                if (p.dadosCompletos) {
-                    dadosFormulario = { ...p.dadosCompletos };
-                } else {
-                    // Fallback to minimal data
-                    dadosFormulario = {
-                        data_casamento: p.data,
-                        tipo_cerimonia: p.tipo,
-                        nome_contraente1: p.solicitante,
-                        cpf_contraente1: p.cpf,
-                        nome_contraente2: p.conjuge,
-                    };
+                    if (p.dadosCompletos) {
+                        dadosFormulario = { ...p.dadosCompletos };
+                    } else {
+                        // Fallback to minimal data
+                        dadosFormulario = {
+                            data_casamento: p.data,
+                            tipo_cerimonia: p.tipo,
+                            nome_contraente1: p.solicitante,
+                            cpf_contraente1: p.cpf,
+                            nome_contraente2: p.conjuge,
+                        };
+                    }
+                    protocoloEdicao = p.id;
                 }
-                protocoloEdicao = p.id;
             }
         } catch (error) {
             console.error("Erro ao carregar pedido para edição:", error);

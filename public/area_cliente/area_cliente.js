@@ -19,21 +19,14 @@ if (cliente?.nome) {
     tituloCliente.textContent = `Olá, ${cliente.nome.split(" ")[0]}`;
 }
 
-function pedidosDoCliente() {
-    const pedidos = SIGACRC.pedidos();
+function normalizarTexto(valor) {
+  return String(valor || "").trim().toLowerCase().replace(/\D/g, "");
+}
 
-    if (!cliente?.email && !cliente?.cpf) {
-        return pedidos;
-    }
-
-    return pedidos.filter((pedido) => {
-        const emailPedido = String(pedido.cliente?.email || pedido.dados?.email_contraente1 || "").toLowerCase();
-        const cpfPedido = String(pedido.cliente?.cpf || pedido.dados?.cpf_contraente1 || "").replace(/\D/g, "");
-        const emailCliente = String(cliente.email || "").toLowerCase();
-        const cpfCliente = String(cliente.cpf || "").replace(/\D/g, "");
-
-        return emailPedido === emailCliente || cpfPedido === cpfCliente;
-    });
+function parseDataSegura(valor) {
+  if (!valor) return new Date(0);
+  const data = new Date(valor);
+  return isNaN(data.getTime()) ? new Date(0) : data;
 }
 
 function atualizarMetricas(pedidos) {
@@ -43,32 +36,64 @@ function atualizarMetricas(pedidos) {
     document.getElementById("totalConcluidos").textContent = pedidos.filter((p) => ["Aprovado", "Recusado"].includes(p.status)).length;
 }
 
-function renderizarPedidos() {
-    const pedidos = pedidosDoCliente().sort((a, b) => new Date(b.enviadoEm) - new Date(a.enviadoEm));
-    atualizarMetricas(pedidos);
+async function renderizarPedidos() {
+    try {
+        const response = await fetch('/api/pedidos');
+        if (!response.ok) throw new Error('Falha ao buscar pedidos');
+        
+        const todosOsPedidos = await response.json();
+        const emailCliente = String(cliente?.email || "").toLowerCase();
+        const cpfCliente = normalizarTexto(cliente?.cpf);
 
-    if (pedidos.length === 0) {
-        listaPedidosCliente.innerHTML = `
-            <div class="mensagem">
-                Nenhum pedido foi encontrado para este cliente. Clique em <strong>Novo pedido</strong> para preencher o formulário de casamento.
-            </div>
-        `;
-        return;
+        // Filtra os pedidos e os mapeia para o formato esperado pelo HTML legado
+        const pedidos = todosOsPedidos
+            .filter((p) => {
+                const emailP = String(p.cliente?.email || p.dadosCompletos?.email_contraente1 || "").toLowerCase();
+                const cpfP = normalizarTexto(p.cliente?.cpf || p.cpf || p.dadosCompletos?.cpf_contraente1);
+                if (!emailCliente && !cpfCliente) return false;
+                return emailP === emailCliente || cpfP === cpfCliente;
+            })
+            .map(p => ({
+                protocolo: p.id,
+                status: p.status,
+                enviadoEm: p.createdAt || p.data,
+                resumo: {
+                    contraente1: p.solicitante,
+                    contraente2: p.conjuge,
+                    tipoCerimonia: p.tipo
+                }
+            }))
+            .sort((a, b) => parseDataSegura(b.enviadoEm).getTime() - parseDataSegura(a.enviadoEm).getTime());
+
+        atualizarMetricas(pedidos);
+
+        if (pedidos.length === 0) {
+            listaPedidosCliente.innerHTML = `
+                <div class="mensagem">
+                    Nenhum pedido foi encontrado para este cliente. Clique em <strong>Novo pedido</strong> para preencher o formulário de casamento.
+                </div>
+            `;
+            return;
+        }
+
+        listaPedidosCliente.innerHTML = pedidos.map((pedido) => `
+            <article class="item-lista">
+                <div>
+                    <h3>${pedido.protocolo}</h3>
+                    <p>${pedido.resumo?.contraente1 || "1º contraente"} e ${pedido.resumo?.contraente2 || "2º contraente"}</p>
+                    <small>Enviado em ${SIGACRC.formatarData(pedido.enviadoEm)} · ${pedido.resumo?.tipoCerimonia || "Tipo não informado"}</small>
+                </div>
+                <div class="form-acoes">
+                    <span class="status ${SIGACRC.classeStatus(pedido.status)}">${pedido.status}</span>
+                    <a class="btn btn-secundario" href="../acompanhamento/acompanhamento.html?protocolo=${encodeURIComponent(pedido.protocolo)}">Detalhes</a>
+                </div>
+            </article>
+        `).join("");
+
+    } catch (erro) {
+        console.error("Erro ao renderizar pedidos:", erro);
+        listaPedidosCliente.innerHTML = `<div class="mensagem erro">Erro ao carregar os pedidos. Tente novamente mais tarde.</div>`;
     }
-
-    listaPedidosCliente.innerHTML = pedidos.map((pedido) => `
-        <article class="item-lista">
-            <div>
-                <h3>${pedido.protocolo}</h3>
-                <p>${pedido.resumo?.contraente1 || "1º contraente"} e ${pedido.resumo?.contraente2 || "2º contraente"}</p>
-                <small>Enviado em ${SIGACRC.formatarData(pedido.enviadoEm)} · ${pedido.resumo?.tipoCerimonia || "Tipo não informado"}</small>
-            </div>
-            <div class="form-acoes">
-                <span class="status ${SIGACRC.classeStatus(pedido.status)}">${pedido.status}</span>
-                <a class="btn btn-secundario" href="../acompanhamento/acompanhamento.html?protocolo=${encodeURIComponent(pedido.protocolo)}">Detalhes</a>
-            </div>
-        </article>
-    `).join("");
 }
 
 async function abrirAtendimento() {

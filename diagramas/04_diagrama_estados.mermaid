@@ -1,0 +1,19 @@
+stateDiagram-v2
+    [*] --> Pendente : Cliente submete o formulário
+
+    Pendente --> EmAnalise : Escrevente/Oficial assume o pedido
+
+    EmAnalise --> ExigenciaDocumental : Documentação incompleta/incorreta
+    EmAnalise --> Aprovado : Documentação conforme
+    EmAnalise --> Recusado : Pedido não atende requisitos
+
+    ExigenciaDocumental --> EmAnalise : Cliente edita e reenvia documentos
+
+    Aprovado --> [*]
+    Recusado --> [*]
+
+    note right of ExigenciaDocumental
+        Loop: cliente pode reenviar
+        quantas vezes forem necessárias
+        até sanar as pendências
+    end note

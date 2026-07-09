@@ -28,6 +28,63 @@ let ordemDecrescente = true; // Por padrão, mais recentes primeiro
 let paginaAtual = 1;
 const itensPorPagina = 10;
 
+function obterDataValida(...candidatos) {
+    for (const valor of candidatos) {
+        const timestamp = new Date(valor).getTime();
+        if (!Number.isNaN(timestamp)) {
+            return valor;
+        }
+    }
+    return new Date(0);
+}
+
+function paraTimestampSeguro(valor) {
+    const timestamp = new Date(valor).getTime();
+    return Number.isNaN(timestamp) ? 0 : timestamp;
+}
+
+function extrairNomeArquivo(url) {
+  if (!url || url === "#") return "Documento";
+  try {
+    const partes = url.split('/');
+    const nomeComHash = partes[partes.length - 1];
+    return decodeURIComponent(nomeComHash).split('-').slice(1).join('-') || nomeComHash;
+  } catch (e) {
+    return "Documento";
+  }
+}
+
+function normalizarDocumento(doc, fallback = "Anexo") {
+  if (typeof doc === 'string') {
+    return {
+      nomeArquivo: extrairNomeArquivo(doc),
+      nomeDocumento: fallback,
+      anexado: true,
+      url: doc
+    };
+  }
+  return {
+    nomeArquivo: doc.nome || doc.rotulo || extrairNomeArquivo(doc.dados || "#"),
+    nomeDocumento: doc.rotulo || fallback,
+    anexado: true,
+    url: doc.dados || doc.url || "#"
+  };
+}
+
+function mapearDocumentosPedido(p) {
+  const docsS3 = (p.documentosAnexos || []).map(url => normalizarDocumento(url, "Anexo S3"));
+  const docsLegados = (p.documentos || []).map(doc => normalizarDocumento(doc, "Legado"));
+  
+  const mapa = new Map();
+  [...docsS3, ...docsLegados].forEach(d => {
+    if (d.url !== "#" && !mapa.has(d.url)) {
+      mapa.set(d.url, d);
+    }
+  });
+  
+  return Array.from(mapa.values());
+}
+
 async function carregarDadosDaApi() {
     try {
         const response = await fetch('/api/pedidos');
@@ -37,26 +94,21 @@ async function carregarDadosDaApi() {
         todosPedidosApi = pedidosBd.map(p => ({
             _idOriginal: p._id, // ID real do MongoDB necessário para o PATCH
             protocolo: p.id,
-            enviadoEm: p.createdAt || p.data,
+            enviadoEm: obterDataValida(p.createdAt, p.data),
             status: p.status,
             observacaoEscrevente: "",
             resumo: {
                 contraente1: p.solicitante,
                 contraente2: p.conjuge,
                 tipoCerimonia: p.tipo,
-                regimeBens: p.dadosCompletos?.regimeBens || "Não informado"
+                regimeBens: p.dadosCompletos?.regime_bens || "Não informado"
             },
             dados: {
                 cpf_contraente1: p.cpf,
-                email_contraente1: p.dadosCompletos?.email || "Não informado",
-                cep_contraente1: p.dadosCompletos?.cep || "Não informado"
+                email_contraente1: p.dadosCompletos?.email_contraente1 || "Não informado",
+                cep_contraente1: p.dadosCompletos?.cep_contraente1 || "Não informado"
             },
-            documentos: (p.documentos || []).map(docObj => ({
-                nomeArquivo: docObj.nome || docObj.rotulo || "Documento",
-                nomeDocumento: docObj.rotulo || "Anexo",
-                anexado: true,
-                url: docObj.dados || "#"
-            })),
+            documentos: mapearDocumentosPedido(p),
             historico: []
         }));
 
@@ -103,8 +155,8 @@ function filtrarPedidos() {
             return combinaBusca && combinaStatus;
         })
         .sort((a, b) => {
-            const dataA = new Date(a.enviadoEm);
-            const dataB = new Date(b.enviadoEm);
+            const dataA = paraTimestampSeguro(a.enviadoEm);
+            const dataB = paraTimestampSeguro(b.enviadoEm);
             return ordemDecrescente ? dataB - dataA : dataA - dataB;
         });
 }
@@ -218,12 +270,64 @@ function renderizarDocumentos(pedido) {
                     </div>
                     <div style="display: flex; gap: 8px; align-items: center;">
                         <span class="status ${doc.anexado ? "aprovado" : "exigencia-documental"}">${doc.anexado ? "Anexado" : "Pendente"}</span>
-                        ${doc.url && doc.url !== "#" ? `<a href="${doc.url}" target="_blank" rel="noopener noreferrer" class="btn btn-secundario" style="padding: 4px 8px; font-size: 12px; text-decoration: none;">Ver/Baixar</a>` : ""}
+                        ${doc.url && doc.url !== "#" ? `<a href="#" data-documento-url="${doc.url}" class="btn btn-secundario js-documento-link" style="padding: 4px 8px; font-size: 12px; text-decoration: none;">Ver/Baixar</a>` : ""}
                     </div>
                 </div>
             `).join("")}
         </div>
     `;
+    
+    inicializarLinksDocumentos();
+}
+
+/**
+ * Solicita a URL assinada ao backend e abre em nova aba.
+ */
+async function abrirDocumentoComPresignedUrl(event) {
+    event.preventDefault();
+    const linkElement = event.currentTarget;
+    const urlOriginal = linkElement.getAttribute("data-documento-url");
+
+    if (!urlOriginal || urlOriginal === "#") {
+        alert("URL do documento inválida.");
+        return;
+    }
+
+    try {
+        // Feedback visual de carregamento
+        const textoOriginal = linkElement.innerText;
+        linkElement.innerText = "Gerando acesso...";
+        linkElement.style.pointerEvents = "none";
+
+        const response = await fetch(`/api/documentos/download?url=${encodeURIComponent(urlOriginal)}`);
+        
+        if (!response.ok) throw new Error("Falha na autenticação do documento.");
+
+        const data = await response.json();
+
+        // Restaura o botão
+        linkElement.innerText = textoOriginal;
+        linkElement.style.pointerEvents = "auto";
+
+        // Abre a URL assinada em nova aba
+        window.open(data.url, "_blank");
+    } catch (error) {
+        console.error("Erro ao acessar documento:", error);
+        alert("Não foi possível visualizar o documento. Verifique sua sessão.");
+        linkElement.innerText = "Erro ao abrir";
+        linkElement.style.pointerEvents = "auto";
+    }
+}
+
+/**
+ * Inicializa os listeners nos links de documentos.
+ */
+function inicializarLinksDocumentos() {
+    const links = document.querySelectorAll(".js-documento-link");
+    links.forEach(link => {
+        link.removeEventListener("click", abrirDocumentoComPresignedUrl);
+        link.addEventListener("click", abrirDocumentoComPresignedUrl);
+    });
 }
 
 function renderizarHistorico(pedido) {

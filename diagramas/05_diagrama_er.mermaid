@@ -1,0 +1,53 @@
+erDiagram
+    USUARIO {
+        ObjectId _id PK
+        string nome
+        string email UK
+        string cpf UK
+        string senha
+        string perfil
+        date createdAt
+        date updatedAt
+    }
+
+    PEDIDO {
+        string id PK "protocolo unico"
+        string solicitante
+        string conjuge
+        string tipo
+        string cpf FK
+        string status
+        date data
+        string testemunha1
+        string testemunha2
+        array documentosAnexos
+        object dadosCompletos
+        date createdAt
+        date updatedAt
+    }
+
+    ATENDIMENTO {
+        string id PK
+        string status
+        object cliente
+        date criadoEm
+        date atualizadoEm
+    }
+
+    MENSAGEM {
+        string autor
+        string perfil
+        string texto
+        date data
+    }
+
+    RECUPERACAO {
+        string email FK
+        string codigo
+        date createdAt "TTL 15min"
+    }
+
+    USUARIO ||--o{ PEDIDO : "solicita (via cpf)"
+    USUARIO ||--o{ ATENDIMENTO : "abre (via cpf/email)"
+    USUARIO ||--o{ RECUPERACAO : "solicita (via email)"
+    ATENDIMENTO ||--|{ MENSAGEM : "contem (embedded)"

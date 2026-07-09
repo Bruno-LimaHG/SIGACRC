@@ -14,7 +14,7 @@ const { conectarMongo } = require("./db/connect");
 const pedidosDb = require("./db/pedidos");
 const usuariosDb = require("./db/usuarios");
 const atendimentosDb = require("./db/atendimentos");
-const { uploadBase64ParaS3 } = require("./services/s3Service");
+const { uploadBase64ParaS3, gerarPreSignedUrl } = require("./services/s3Service");
 
 const app = express();
 app.set('trust proxy', 1);
@@ -44,6 +44,22 @@ app.use(cors({ origin: "*" })); // Em produção na VM da AWS, trocar '*' pela U
 app.use(express.json({ limit: "25mb" }));
 app.use(express.static(PUBLIC_DIR));
 
+// Rota para baixar/visualizar documentos com Pre-Signed URL
+app.get("/api/documentos/download", async (req, res) => {
+    try {
+        const urlOriginal = req.query.url;
+
+        if (!urlOriginal) {
+            return res.status(400).json({ error: "URL do documento não fornecida." });
+        }
+
+        const urlAssinada = await gerarPreSignedUrl(urlOriginal);
+        return res.json({ url: urlAssinada });
+    } catch (error) {
+        console.error("Erro na rota de download:", error);
+        return res.status(500).json({ error: "Erro ao processar solicitação de acesso." });
+    }
+});
 // --- Middleware de Proteção ---
 const autenticar = (req, res, next) => {
     // Tenta pegar o token do cabeçalho Authorization ou do x-user-id como fallback legado
@@ -146,7 +162,7 @@ app.post("/api/pedidos", autenticar, async (req, res) => {
                         id: anexo.id,
                         rotulo: anexo.rotulo,
                         nome: anexo.nome,
-                        tipo: "url_s3",
+                        tipo: anexo.tipo,
                         dados: urlAws // Substitui o arquivo pesado pela URL pública
                     });
                 } catch(e) {
@@ -159,17 +175,17 @@ app.post("/api/pedidos", autenticar, async (req, res) => {
         }
 
         const novo = await pedidosDb.criarPedido({
-            solicitante: body.solicitante || "Não informado",
-            conjuge: body.conjuge || "Não informado",
-            tipo: body.tipo || "Não informado",
-            cpf: body.cpf || "",
+            solicitante: body.resumo?.contraente1 || body.solicitante || "Não informado",
+            conjuge: body.resumo?.contraente2 || body.conjuge || "Não informado",
+            tipo: body.resumo?.tipoCerimonia || body.tipo || "Não informado",
+            cpf: body.cliente?.cpf || body.cpf || "",
             status: "Pendente",
-            data: body.data || formatarData(new Date().toISOString().slice(0, 10)),
-            testemunha1: body.testemunha1 || "",
-            testemunha2: body.testemunha2 || "",
+            data: body.resumo?.dataCasamento || body.data || formatarData(new Date().toISOString().slice(0, 10)),
+            testemunha1: body.dados?.testemunha1_nome || body.testemunha1 || "",
+            testemunha2: body.dados?.testemunha2_nome || body.testemunha2 || "",
             documentos: Array.isArray(body.documentos) ? body.documentos : [],
             documentosAnexos: documentosProcessados,
-            dadosCompletos: body.dadosCompletos || {}
+            dadosCompletos: body.dados || body.dadosCompletos || {}
         });
         res.status(201).json(novo);
     } catch (error) {

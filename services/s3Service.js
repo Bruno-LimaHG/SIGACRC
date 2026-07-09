@@ -1,4 +1,5 @@
-const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+const { S3Client, PutObjectCommand, GetObjectCommand } = require("@aws-sdk/client-s3");
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const crypto = require("crypto");
 
 // Inicializando o cliente da AWS usando as credenciais do .env
@@ -57,6 +58,49 @@ async function uploadBase64ParaS3(base64String, nomeOriginal) {
     return `https://${process.env.AWS_BUCKET_NAME}.s3.${regiao}.amazonaws.com/${chaveNoBucket}`;
 }
 
+/**
+ * Extrai a chave (Key) do objeto S3 a partir de uma URL completa ou string.
+ */
+function extrairChaveS3(input) {
+    if (!input) return null;
+    if (input.startsWith("http")) {
+        try {
+            const url = new URL(input);
+            // Remove a barra inicial do pathname para obter a chave
+            return url.pathname.startsWith("/") ? url.pathname.substring(1) : url.pathname;
+        } catch (e) {
+            return null;
+        }
+    }
+    return input;
+}
+
+/**
+ * Gera uma URL assinada para download/visualização.
+ */
+async function gerarPreSignedUrl(arquivoInput, expiracaoSegundos = 900) {
+    try {
+        const chave = extrairChaveS3(arquivoInput);
+        if (!chave) throw new Error("Chave do arquivo inválida.");
+
+        const command = new GetObjectCommand({
+            Bucket: process.env.AWS_BUCKET_NAME,
+            Key: chave,
+        });
+
+        const urlAssinada = await getSignedUrl(s3Client, command, { 
+            expiresIn: expiracaoSegundos 
+        });
+
+        return urlAssinada;
+    } catch (error) {
+        console.error("Erro ao gerar Pre-Signed URL:", error);
+        throw error;
+    }
+}
+
 module.exports = {
-    uploadBase64ParaS3
+    uploadBase64ParaS3,
+    gerarPreSignedUrl,
+    extrairChaveS3
 };

@@ -1,0 +1,59 @@
+flowchart TB
+    subgraph Sistema["SIGACRC - Sistema de Gestão de Casamento Civil"]
+        UC1((Cadastrar-se))
+        UC2((Login))
+        UC3((Consultar CEP - ViaCEP))
+        UC4((Preencher Pedido<br/>8 Etapas))
+        UC5((Anexar Documentos))
+        UC6((Acompanhar Status<br/>por Protocolo))
+        UC7((Abrir Ticket<br/>de Atendimento))
+        UC8((Enviar Mensagem<br/>no Chat))
+        UC9((Editar e Reenviar<br/>Pedido))
+        UC10((Login Interno))
+        UC11((Listar Pedidos<br/>Pendentes))
+        UC12((Assumir Pedido<br/>para Análise))
+        UC13((Analisar<br/>Documentação))
+        UC14((Solicitar Exigência<br/>Documental))
+        UC15((Responder Ticket<br/>de Atendimento))
+        UC16((Aprovar Pedido))
+        UC17((Recusar Pedido))
+        UC18((Gerenciar Usuários<br/>Internos))
+        UC19((Recuperar Senha))
+    end
+
+    Cliente([Cliente / Noivos])
+    Escrevente([Escrevente])
+    Oficial([Oficial])
+
+    Cliente --> UC1
+    Cliente --> UC2
+    Cliente --> UC19
+    UC1 --> UC3
+    Cliente --> UC4
+    UC4 --> UC5
+    Cliente --> UC6
+    Cliente --> UC7
+    Cliente --> UC8
+    Cliente --> UC9
+
+    Escrevente --> UC10
+    Escrevente --> UC11
+    Escrevente --> UC12
+    Escrevente --> UC13
+    Escrevente --> UC14
+    Escrevente --> UC15
+
+    Oficial --> UC10
+    Oficial --> UC11
+    Oficial --> UC12
+    Oficial --> UC13
+    Oficial --> UC14
+    Oficial --> UC15
+    Oficial --> UC16
+    Oficial --> UC17
+    Oficial --> UC18
+
+    UC13 -.include.-> UC5
+    UC14 -.include.-> UC9
+    UC16 -.extend.-> UC13
+    UC17 -.extend.-> UC13

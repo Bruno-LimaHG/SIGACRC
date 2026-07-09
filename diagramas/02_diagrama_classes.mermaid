@@ -1,0 +1,69 @@
+classDiagram
+    class Usuario {
+        +ObjectId _id
+        +String nome
+        +String email
+        +String cpf
+        +String senha
+        +String perfil
+        +Date createdAt
+        +Date updatedAt
+        +login()
+        +recuperarSenha()
+    }
+
+    class Pedido {
+        +String id
+        +String solicitante
+        +String conjuge
+        +String tipo
+        +String cpf
+        +String status
+        +Date data
+        +String testemunha1
+        +String testemunha2
+        +String[] documentosAnexos
+        +Object dadosCompletos
+        +Date createdAt
+        +Date updatedAt
+        +iniciarAnalise()
+        +solicitarExigencia()
+        +aprovar()
+        +recusar()
+    }
+
+    class Atendimento {
+        +String id
+        +String status
+        +Object cliente
+        +Date criadoEm
+        +Date atualizadoEm
+        +Mensagem[] mensagens
+        +responder()
+        +reabrir()
+    }
+
+    class Mensagem {
+        +String autor
+        +String perfil
+        +String texto
+        +Date data
+    }
+
+    class Recuperacao {
+        +String email
+        +String codigo
+        +Date createdAt
+    }
+
+    class DocumentoS3 {
+        +String url
+        +String tipo
+        +Date uploadEm
+    }
+
+    Usuario "1" --> "0..*" Pedido : solicita
+    Usuario "1" --> "0..*" Atendimento : abre
+    Usuario "1" --> "0..*" Recuperacao : solicita
+    Atendimento "1" *-- "0..*" Mensagem : contém
+    Pedido "1" o-- "0..*" DocumentoS3 : referencia
