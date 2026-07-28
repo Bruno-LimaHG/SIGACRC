@@ -113,7 +113,7 @@ async function carregarDadosDaApi() {
         }));
 
         const resAtend = await fetch('/api/atendimentos', {
-            headers: { 'x-user-id': 'escrevente' }
+            headers: { 'Authorization': 'Bearer ' + (SIGACRC.recuperarEscreventeLogado() ? SIGACRC.recuperarEscreventeLogado().token : '') }
         });
         if (resAtend.ok) {
             todosAtendimentos = await resAtend.json();
@@ -440,7 +440,7 @@ formAtualizarPedido.addEventListener("submit", async (event) => {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
-                'x-user-id': 'escrevente' // Simula o cabeçalho de auth esperado pela API
+                'Authorization': 'Bearer ' + (SIGACRC.recuperarEscreventeLogado() ? SIGACRC.recuperarEscreventeLogado().token : '') // Simula o cabeçalho de auth esperado pela API
             },
             body: JSON.stringify({ status: novoStatus })
         });
@@ -485,7 +485,7 @@ formResponderAtendimento.addEventListener("submit", async (event) => {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
-                "x-user-id": "escrevente"
+                'Authorization': 'Bearer ' + (SIGACRC.recuperarEscreventeLogado() ? SIGACRC.recuperarEscreventeLogado().token : '')
             },
             body: JSON.stringify({ autor: "Escrevente SIGACRC", perfil: "funcionario", texto })
         });

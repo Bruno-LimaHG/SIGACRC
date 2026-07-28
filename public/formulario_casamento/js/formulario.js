@@ -202,7 +202,7 @@ form.addEventListener("submit", async (event) => {
     const cliente = SIGACRC.clienteLogado();
 
     try {
-        const tokenHeader = cliente && cliente.token ? { 'Authorization': `Bearer ${cliente.token}` } : { 'x-user-id': cliente ? cliente.id : 'sem-id' };
+        const tokenHeader = { 'Authorization': `Bearer ${SIGACRC.obterClienteLogado() ? SIGACRC.obterClienteLogado().token : ''}` };
         
         const method = protocoloEdicao ? 'PUT' : 'POST';
         const url = protocoloEdicao ? `/api/pedidos/${protocoloEdicao}` : '/api/pedidos';

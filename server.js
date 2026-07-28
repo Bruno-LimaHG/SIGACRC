@@ -9,6 +9,8 @@ const { OAuth2Client } = require("google-auth-library");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const rateLimit = require("express-rate-limit");
+const morgan = require("morgan");
+const logger = require("./utils/logger");
 
 const { conectarMongo } = require("./db/connect");
 const pedidosDb = require("./db/pedidos");
@@ -40,6 +42,7 @@ const authLimiter = rateLimit({
 
 const helmet = require('helmet');
 app.use(helmet());
+app.use(morgan('combined', { stream: { write: message => logger.info(message.trim()) } }));
 app.use(cors({ origin: "*" })); // Em produção na VM da AWS, trocar '*' pela URL do seu front-end
 app.use(express.json({ limit: "25mb" }));
 app.use(express.static(PUBLIC_DIR));
@@ -62,7 +65,6 @@ app.get("/api/documentos/download", async (req, res) => {
 });
 // --- Middleware de Proteção ---
 const autenticar = (req, res, next) => {
-    // Tenta pegar o token do cabeçalho Authorization ou do x-user-id como fallback legado
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
     
@@ -73,11 +75,7 @@ const autenticar = (req, res, next) => {
             next();
         });
     } else {
-        const userId = req.headers['x-user-id'];
-        if (!userId || userId === "sem-id") {
-            return res.status(403).json({ erro: "Acesso negado: Usuário não autenticado" });
-        }
-        next();
+        return res.status(403).json({ erro: "Acesso negado: Token não fornecido" });
     }
 };
 
@@ -459,6 +457,12 @@ app.patch("/api/atendimentos/:id", autenticar, async (req, res) => {
     }
 });
 
+// Error handling middleware global para registrar falhas silenciosas
+app.use((err, req, res, next) => {
+    logger.error(`Erro 500 capturado globalmente: ${err.message}`, { stack: err.stack, url: req.originalUrl, method: req.method });
+    res.status(500).json({ erro: "Erro interno no servidor" });
+});
+
 async function iniciar() {
     try {
         try {
@@ -490,4 +494,8 @@ async function iniciar() {
     }
 }
 
-iniciar();
+if (require.main === module) {
+    iniciar();
+}
+
+module.exports = { app, iniciar };

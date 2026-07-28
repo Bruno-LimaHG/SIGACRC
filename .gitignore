@@ -26,3 +26,11 @@ db/
 # Secrets and Keys
 AWS/
 *.pem
+
+# Backups
+backups/
+*.archive
+
+# Drafts and Documents
+*.docx
+TCC_text.txt

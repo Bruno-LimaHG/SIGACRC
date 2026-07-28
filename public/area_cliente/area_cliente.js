@@ -112,7 +112,7 @@ async function renderizarAtendimentosCliente() {
     let atendimentos = [];
     try {
         const response = await fetch('/api/atendimentos', {
-            headers: { 'x-user-id': cliente ? cliente.cpf : 'sem-id' }
+            headers: { 'Authorization': 'Bearer ' + (SIGACRC.obterClienteLogado() ? SIGACRC.obterClienteLogado().token : '') }
         });
         if (response.ok) {
             const todos = await response.json();
@@ -204,7 +204,7 @@ formAtendimentoCliente.addEventListener("submit", async (event) => {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "x-user-id": cliente ? cliente.cpf : "sem-id"
+                'Authorization': 'Bearer ' + (SIGACRC.obterClienteLogado() ? SIGACRC.obterClienteLogado().token : '')
             },
             body: JSON.stringify(novoAtendimento)
         });

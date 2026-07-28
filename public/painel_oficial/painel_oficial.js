@@ -25,7 +25,7 @@ const itensPorPagina = 10;
 async function carregarFuncionarios() {
     try {
         const response = await fetch('/api/usuarios/escreventes', {
-            headers: { 'x-user-id': 'oficial' }
+            headers: { 'Authorization': 'Bearer ' + (SIGACRC.recuperarEscreventeLogado() ? SIGACRC.recuperarEscreventeLogado().token : '') }
         });
         if (response.ok) {
             todosFuncionarios = await response.json();
@@ -78,7 +78,7 @@ async function deletarFuncionario(id) {
     try {
         const response = await fetch(`/api/usuarios/${id}`, {
             method: 'DELETE',
-            headers: { 'x-user-id': 'oficial' }
+            headers: { 'Authorization': 'Bearer ' + (SIGACRC.recuperarEscreventeLogado() ? SIGACRC.recuperarEscreventeLogado().token : '') }
         });
         if (response.ok) {
             await carregarFuncionarios();
@@ -143,7 +143,7 @@ btnFecharModalAdicionar.addEventListener("click", fecharModalAdicionar);
 async function carregarPedidosEAtendimentos() {
     try {
         const response = await fetch('/api/pedidos', {
-            headers: { 'x-user-id': 'oficial' }
+            headers: { 'Authorization': 'Bearer ' + (SIGACRC.recuperarEscreventeLogado() ? SIGACRC.recuperarEscreventeLogado().token : '') }
         });
         const pedidosBd = await response.json();
         
@@ -168,7 +168,7 @@ async function carregarPedidosEAtendimentos() {
         }));
 
         const resAtend = await fetch('/api/atendimentos', {
-            headers: { 'x-user-id': 'oficial' }
+            headers: { 'Authorization': 'Bearer ' + (SIGACRC.recuperarEscreventeLogado() ? SIGACRC.recuperarEscreventeLogado().token : '') }
         });
         if (resAtend.ok) {
             todosAtendimentos = await resAtend.json();
@@ -328,7 +328,7 @@ document.getElementById("formAlterarMinhaSenha").addEventListener("submit", asyn
     try {
         const response = await fetch(`/api/usuarios/${admin.id}/senha`, {
             method: "PATCH",
-            headers: { "Content-Type": "application/json", "x-user-id": "oficial" },
+            headers: { "Content-Type": "application/json", 'Authorization': 'Bearer ' + (SIGACRC.recuperarEscreventeLogado() ? SIGACRC.recuperarEscreventeLogado().token : '') },
             body: JSON.stringify({ novaSenha })
         });
         const resData = await response.json();
@@ -363,7 +363,7 @@ document.getElementById("formAlterarSenhaFuncionario").addEventListener("submit"
     try {
         const response = await fetch(`/api/usuarios/${funcId}/senha`, {
             method: "PATCH",
-            headers: { "Content-Type": "application/json", "x-user-id": "oficial" },
+            headers: { "Content-Type": "application/json", 'Authorization': 'Bearer ' + (SIGACRC.recuperarEscreventeLogado() ? SIGACRC.recuperarEscreventeLogado().token : '') },
             body: JSON.stringify({ novaSenha })
         });
         const resData = await response.json();
