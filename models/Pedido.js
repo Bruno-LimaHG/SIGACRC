@@ -6,12 +6,13 @@ const documentoAnexoSchema = new mongoose.Schema(
         rotulo: String,
         nome: String,
         tipo: String,
-        dados: String
+        dados: String,
+        status: String
     },
     { _id: false }
 );
 
-const pedidoSchema = new mongoose.Schema(
+    const pedidoSchema = new mongoose.Schema(
     {
         id: { type: String, required: true, unique: true },
         solicitante: { type: String, default: "Não informado" },
@@ -22,6 +23,8 @@ const pedidoSchema = new mongoose.Schema(
         data: { type: String, default: "" },
         testemunha1: { type: String, default: "" },
         testemunha2: { type: String, default: "" },
+        observacaoEscrevente: { type: String, default: "" },
+        historico: { type: [mongoose.Schema.Types.Mixed], default: [] },
         documentos: { type: [mongoose.Schema.Types.Mixed], default: [] },
         documentosAnexos: { type: [documentoAnexoSchema], default: [] },
         dadosCompletos: { type: mongoose.Schema.Types.Mixed, default: {} }
