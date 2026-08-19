@@ -11,7 +11,14 @@ jest.mock('../db/pedidos');
 jest.mock('../db/usuarios');
 jest.mock('bcryptjs');
 jest.mock('../services/s3Service');
+jest.mock('../queues', () => ({        
+  s3Queue: { add: jest.fn() },         
+  emailQueue: { add: jest.fn() },      
+  backupQueue: { add: jest.fn() }      
+}));    
 jest.mock('jsonwebtoken');
+
+const { s3Queue } = require('../queues');
 
 describe('Testes Avançados da API - Fluxos Críticos', () => {
 
@@ -78,9 +85,9 @@ describe('Testes Avançados da API - Fluxos Críticos', () => {
                 .send(payload);
 
             expect(res.status).toBe(201);
-            expect(s3Service.uploadBase64ParaS3).toHaveBeenCalledTimes(1);
+            expect(s3Queue.add).toHaveBeenCalledTimes(1);
             expect(pedidosDb.criarPedido).toHaveBeenCalledTimes(1);
-            expect(res.body.status).toBe('Pendente');
+            expect(res.body.mensagem).toBe('Pedido criado. Documentos em processamento.');
         });
 
         test('Deve ser bloqueado (403) se não enviar o token (acesso negado)', async () => {

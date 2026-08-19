@@ -14,7 +14,7 @@ async function renderizarResultado(protocolo) {
     resultadoConsulta.classList.remove("oculto");
 
     try {
-        const response = await fetch('/api/pedidos');
+        const response = await fetch('/api/pedidos?t=' + new Date().getTime());
         const pedidos = await response.json();
         
         const p = pedidos.find(pedido => pedido.id === idBusca);
@@ -34,9 +34,9 @@ async function renderizarResultado(protocolo) {
                 contraente2: p.conjuge
             },
             enviadoEm: p.createdAt || p.data,
-            observacaoEscrevente: p.dadosCompletos?.observacaoEscrevente || "",
-            documentos: (p.documentos || []).map(d => ({ nomeDocumento: "Arquivo", nomeArquivo: d })),
-            historico: []
+            observacaoEscrevente: p.observacaoEscrevente || "",
+            documentos: [...(p.documentosAnexos || []), ...(p.documentos || [])].map(d => ({ nomeDocumento: d.rotulo || "Arquivo", nomeArquivo: typeof d === 'string' ? d : (d.nome || d.rotulo) })),
+            historico: p.historico || []
         };
 
         resultadoConsulta.className = "mensagem sucesso";
@@ -49,7 +49,7 @@ async function renderizarResultado(protocolo) {
             <h3>Documentos anexados</h3>
             <ul>${pedidoMap.documentos.length > 0 ? pedidoMap.documentos.map((doc) => `<li>${doc.nomeDocumento}: ${doc.nomeArquivo || "Não anexado"}</li>`).join("") : "<li>Nenhum documento listado.</li>"}</ul>
             <h3>Histórico de atualizações</h3>
-            <ul>${pedidoMap.historico.length > 0 ? pedidoMap.historico.map((item) => `<li>${SIGACRC.formatarData(item.data)} - ${item.descricao}</li>`).join("") : "<li>Sem histórico registrado (as alterações de status do painel ainda não geram log para o cliente).</li>"}</ul>
+            <ul>${pedidoMap.historico.length > 0 ? pedidoMap.historico.map((item) => `<li>${SIGACRC.formatarData(item.data)} - ${item.descricao}</li>`).join("") : "<li>Sem histórico registrado.</li>"}</ul>
             ${(pedidoMap.status === "Recusado" || pedidoMap.status === "Exigência documental") ? `<div style="margin-top: 20px;"><a href="../formulario_casamento/formulario_casamento.html?editar=${encodeURIComponent(pedidoMap.protocolo)}" class="btn">Editar Solicitação</a></div>` : ""}
         `;
     } catch(err) {

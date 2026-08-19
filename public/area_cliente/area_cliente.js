@@ -1,3 +1,13 @@
+const socket = io({
+    auth: {
+        token: SIGACRC.clienteLogado()?.token
+    }
+});
+
+socket.on("nova_mensagem", (dados) => {
+    renderizarAtendimentosCliente();
+});
+
 const cliente = SIGACRC.clienteLogado();
 
 if (!cliente) {
@@ -112,7 +122,7 @@ async function renderizarAtendimentosCliente() {
     let atendimentos = [];
     try {
         const response = await fetch('/api/atendimentos', {
-            headers: { 'Authorization': 'Bearer ' + (SIGACRC.obterClienteLogado() ? SIGACRC.obterClienteLogado().token : '') }
+            headers: { 'Authorization': 'Bearer ' + (SIGACRC.clienteLogado() ? SIGACRC.clienteLogado().token : '') }
         });
         if (response.ok) {
             const todos = await response.json();
@@ -125,6 +135,8 @@ async function renderizarAtendimentosCliente() {
                 if (!emailCliente && !cpfCliente) return false;
                 return emailAtendimento === emailCliente || cpfAtendimento === cpfCliente;
             });
+            
+            atendimentos.forEach(a => socket.emit("entrar_atendimento", { atendimentoId: a.id }));
         }
     } catch (error) {
         console.error("Erro ao buscar atendimentos:", error);
@@ -204,7 +216,7 @@ formAtendimentoCliente.addEventListener("submit", async (event) => {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                'Authorization': 'Bearer ' + (SIGACRC.obterClienteLogado() ? SIGACRC.obterClienteLogado().token : '')
+                'Authorization': 'Bearer ' + (SIGACRC.clienteLogado() ? SIGACRC.clienteLogado().token : '')
             },
             body: JSON.stringify(novoAtendimento)
         });

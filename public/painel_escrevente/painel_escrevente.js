@@ -1,3 +1,13 @@
+const socket = io({
+    auth: {
+        token: SIGACRC.recuperarEscreventeLogado()?.token
+    }
+});
+
+socket.on("nova_mensagem", (dados) => {
+    carregarDadosDaApi();
+});
+
 const corpoTabelaPedidos = document.getElementById("corpoTabelaPedidos");
 const estadoVazio = document.getElementById("estadoVazio");
 const buscaPedido = document.getElementById("buscaPedido");
@@ -87,7 +97,7 @@ function mapearDocumentosPedido(p) {
 
 async function carregarDadosDaApi() {
     try {
-        const response = await fetch('/api/pedidos');
+        const response = await fetch('/api/pedidos?t=' + new Date().getTime());
         const pedidosBd = await response.json();
         
         // Mapeia os dados do Banco (MongoDB) para a estrutura visual que o HTML do Escrevente já espera
@@ -96,7 +106,7 @@ async function carregarDadosDaApi() {
             protocolo: p.id,
             enviadoEm: obterDataValida(p.createdAt, p.data),
             status: p.status,
-            observacaoEscrevente: "",
+            observacaoEscrevente: p.observacaoEscrevente || "",
             resumo: {
                 contraente1: p.solicitante,
                 contraente2: p.conjuge,
@@ -109,7 +119,7 @@ async function carregarDadosDaApi() {
                 cep_contraente1: p.dadosCompletos?.cep_contraente1 || "Não informado"
             },
             documentos: mapearDocumentosPedido(p),
-            historico: []
+            historico: p.historico || []
         }));
 
         const resAtend = await fetch('/api/atendimentos', {
@@ -403,6 +413,8 @@ function abrirAtendimentoFuncionario(id) {
     renderizarHistoricoAtendimentoFuncionario(atendimento);
     modalAtendimentoFuncionario.classList.remove("oculto");
     modalAtendimentoFuncionario.setAttribute("aria-hidden", "false");
+    
+    socket.emit("entrar_atendimento", { atendimentoId: id });
 }
 
 function renderizarHistoricoAtendimentoFuncionario(atendimento) {
@@ -418,6 +430,9 @@ function renderizarHistoricoAtendimentoFuncionario(atendimento) {
 }
 
 function fecharAtendimentoFuncionario() {
+    if (atendimentoSelecionado) {
+        socket.emit("sair_atendimento", { atendimentoId: atendimentoSelecionado });
+    }
     modalAtendimentoFuncionario.classList.add("oculto");
     modalAtendimentoFuncionario.setAttribute("aria-hidden", "true");
     atendimentoSelecionado = null;
@@ -442,7 +457,7 @@ formAtualizarPedido.addEventListener("submit", async (event) => {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + (SIGACRC.recuperarEscreventeLogado() ? SIGACRC.recuperarEscreventeLogado().token : '') // Simula o cabeçalho de auth esperado pela API
             },
-            body: JSON.stringify({ status: novoStatus })
+            body: JSON.stringify({ status: novoStatus, observacaoEscrevente })
         });
         
         if (!response.ok) {
@@ -481,25 +496,17 @@ formResponderAtendimento.addEventListener("submit", async (event) => {
     }
 
     try {
-        const response = await fetch(`/api/atendimentos/${atendimentoSelecionado}`, {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json",
-                'Authorization': 'Bearer ' + (SIGACRC.recuperarEscreventeLogado() ? SIGACRC.recuperarEscreventeLogado().token : '')
-            },
-            body: JSON.stringify({ autor: "Escrevente SIGACRC", perfil: "funcionario", texto })
+        socket.emit("enviar_mensagem", {
+            atendimentoId: atendimentoSelecionado,
+            autor: "Escrevente SIGACRC",
+            perfil: "funcionario",
+            texto
         });
-        
-        if (response.ok) {
-            const atendimentoAtualizado = await response.json();
-            respostaAtendimentoFuncionario.value = "";
-            mensagemRespostaAtendimento.className = "mensagem sucesso";
-            mensagemRespostaAtendimento.textContent = "Resposta enviada para a área do cliente.";
-            mensagemRespostaAtendimento.classList.remove("oculto");
 
-            renderizarHistoricoAtendimentoFuncionario(atendimentoAtualizado);
-            await carregarDadosDaApi();
-        }
+        respostaAtendimentoFuncionario.value = "";
+        mensagemRespostaAtendimento.className = "mensagem sucesso";
+        mensagemRespostaAtendimento.textContent = "Resposta enviada para a área do cliente.";
+        mensagemRespostaAtendimento.classList.remove("oculto");
     } catch (e) {
         console.error(e);
     }

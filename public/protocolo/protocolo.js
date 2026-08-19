@@ -11,7 +11,7 @@ async function carregarProtocolo() {
 
     try {
         const cliente = SIGACRC.clienteLogado();
-        const headers = { 'Authorization': `Bearer ${SIGACRC.obterClienteLogado() ? SIGACRC.obterClienteLogado().token : ''}` };
+        const headers = { 'Authorization': `Bearer ${SIGACRC.clienteLogado() ? SIGACRC.clienteLogado().token : ''}` };
         
         const response = await fetch(`/api/pedidos/${protocoloLocal}`, { headers });
         

@@ -1,5 +1,10 @@
 require("dotenv").config();
 
+const http = require("http");
+const { Server } = require("socket.io");
+const { setupSocket } = require("./sockets");
+const { s3Queue, emailQueue, backupQueue } = require("./queues");
+
 const express = require("express");
 const axios = require("axios");
 const cors = require("cors");
@@ -150,23 +155,19 @@ app.post("/api/pedidos", autenticar, async (req, res) => {
         // --- Processamento de arquivos para o S3 ---
         const documentosProcessados = [];
         const anexosBrutos = Array.isArray(body.documentosAnexos) ? body.documentosAnexos : [];
+        const anexosParaProcessar = [];
         
         for (const anexo of anexosBrutos) {
             if (anexo.dados && anexo.dados.startsWith("data:")) {
-                // Sobe o Base64 pra AWS e pega a URL
-                try {
-                    const urlAws = await uploadBase64ParaS3(anexo.dados, anexo.nome || anexo.rotulo);
-                    documentosProcessados.push({
-                        id: anexo.id,
-                        rotulo: anexo.rotulo,
-                        nome: anexo.nome,
-                        tipo: anexo.tipo,
-                        dados: urlAws // Substitui o arquivo pesado pela URL pública
-                    });
-                } catch(e) {
-                    console.error("Falha ao subir pro S3, salvando vazio:", e);
-                    documentosProcessados.push(anexo);
-                }
+                anexosParaProcessar.push(anexo);
+                documentosProcessados.push({
+                    id: anexo.id,
+                    rotulo: anexo.rotulo,
+                    nome: anexo.nome || anexo.rotulo,
+                    tipo: anexo.tipo || anexo.mimetype || "application/octet-stream",
+                    dados: null,
+                    status: "processando"
+                });
             } else {
                 documentosProcessados.push(anexo);
             }
@@ -185,7 +186,17 @@ app.post("/api/pedidos", autenticar, async (req, res) => {
             documentosAnexos: documentosProcessados,
             dadosCompletos: body.dados || body.dadosCompletos || {}
         });
-        res.status(201).json(novo);
+
+        // Adicionar jobs na fila
+        for (const anexo of anexosParaProcessar) {
+            await s3Queue.add("upload", {
+                base64String: anexo.dados,
+                nomeOriginal: anexo.nome || anexo.rotulo,
+                pedidoId: novo.id
+            });
+        }
+
+        res.status(201).json({ mensagem: "Pedido criado. Documentos em processamento.", pedidoId: novo.id });
     } catch (error) {
         console.error(error);
         res.status(500).json({ erro: "Erro ao salvar pedido" });
@@ -195,8 +206,9 @@ app.post("/api/pedidos", autenticar, async (req, res) => {
 // ROTA PROTEGIDA
 app.patch("/api/pedidos/:id", autenticar, async (req, res) => {
     try {
+        console.log("PATCH /api/pedidos/:id chamado:", req.params.id, req.body);
         if (!req.body.status) return res.status(400).json({ erro: "Status não informado" });
-        const pedido = await pedidosDb.atualizarStatusPedido(req.params.id, req.body.status);
+        const pedido = await pedidosDb.atualizarStatusPedido(req.params.id, req.body.status, req.body.observacaoEscrevente);
         if (!pedido) return res.status(404).json({ erro: "Pedido não encontrado" });
         res.json(pedido);
     } catch (error) {
@@ -208,22 +220,24 @@ app.patch("/api/pedidos/:id", autenticar, async (req, res) => {
 app.put("/api/pedidos/:id", async (req, res) => {
     try {
         const body = req.body;
-        const documentosProcessados = [];
         
-        if (body.documentos && Array.isArray(body.documentos)) {
-            for (const anexo of body.documentos) {
-                if (anexo.dados && anexo.dados.startsWith("data:")) {
-                    const urlAws = await uploadBase64ParaS3(anexo.dados, anexo.nome || anexo.rotulo);
-                    documentosProcessados.push({
-                        id: anexo.id,
-                        rotulo: anexo.rotulo,
-                        nome: anexo.nome,
-                        tipo: "url_s3",
-                        dados: urlAws
-                    });
-                } else {
-                    documentosProcessados.push(anexo);
-                }
+        const documentosProcessados = [];
+        const anexosBrutos = Array.isArray(body.documentosAnexos) ? body.documentosAnexos : [];
+        const anexosParaProcessar = [];
+        
+        for (const anexo of anexosBrutos) {
+            if (anexo.dados && anexo.dados.startsWith("data:")) {
+                anexosParaProcessar.push(anexo);
+                documentosProcessados.push({
+                    id: anexo.id,
+                    rotulo: anexo.rotulo,
+                    nome: anexo.nome || anexo.rotulo,
+                    tipo: anexo.tipo || anexo.mimetype || "application/octet-stream",
+                    dados: null,
+                    status: "processando"
+                });
+            } else {
+                documentosProcessados.push(anexo);
             }
         }
 
@@ -233,17 +247,28 @@ app.put("/api/pedidos/:id", async (req, res) => {
             tipo: body.tipo,
             cpf: body.cpf,
             dadosCompletos: body.dadosCompletos,
-            documentos: documentosProcessados.length > 0 ? documentosProcessados : body.documentos,
-            status: "Pendente"
+            documentos: Array.isArray(body.documentos) ? body.documentos : [],
+            documentosAnexos: documentosProcessados,
+            status: "Pendente",
+            observacaoEscrevente: ""
         };
 
         const pedidoAtualizado = await pedidosDb.atualizarPedidoCompleto(req.params.id, dadosAtualizados);
         
         if (!pedidoAtualizado) return res.status(404).json({ erro: "Pedido não encontrado" });
+
+        for (const anexo of anexosParaProcessar) {
+            await s3Queue.add("upload", {
+                base64String: anexo.dados,
+                nomeOriginal: anexo.nome || anexo.rotulo,
+                pedidoId: pedidoAtualizado.id
+            });
+        }
+
         res.json(pedidoAtualizado);
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ erro: "Erro ao atualizar pedido" });
+        console.error("Erro na rota PUT:", error);
+        res.status(500).json({ erro: "Falha ao processar os novos documentos anexados" });
     }
 });
 
@@ -378,27 +403,12 @@ app.post("/api/auth/esqueci-senha", authLimiter, async (req, res) => {
         const codigo = Math.floor(100000 + Math.random() * 900000).toString();
         await Recuperacao.create({ email, codigo });
 
-        // Enviar e-mail
-        // Tenta usar ethereal.email para testes, ou credenciais reais se existirem
-        let transporter = nodemailer.createTransport({
-            host: process.env.EMAIL_HOST || 'smtp.ethereal.email',
-            port: process.env.EMAIL_PORT || 587,
-            auth: {
-                user: process.env.EMAIL_USER || 'johathan.nicolas@ethereal.email',
-                pass: process.env.EMAIL_PASS
-            }
-        });
-        
-        const info = await transporter.sendMail({
-            from: '"SIGACRC" <noreply@sigacrc.com.br>',
+        await emailQueue.add("enviar", {
             to: email,
             subject: "Código de Recuperação de Senha",
             text: `Seu código de recuperação é: ${codigo}`,
             html: `<p>Seu código de recuperação é: <b>${codigo}</b></p>`
         });
-        
-        console.log("E-mail enviado: %s", info.messageId);
-        console.log("URL de visualização (se ethereal): %s", nodemailer.getTestMessageUrl(info));
         
         res.json({ mensagem: "Código enviado para o e-mail informado" });
     } catch (error) {
@@ -451,6 +461,14 @@ app.patch("/api/atendimentos/:id", autenticar, async (req, res) => {
     try {
         const { autor, perfil, texto } = req.body;
         const atualizado = await atendimentosDb.adicionarMensagem(req.params.id, autor, perfil, texto);
+        
+        const io = req.app.get("io");
+        if (io) {
+            io.to(`atendimento_${req.params.id}`).emit("nova_mensagem", {
+                autor, perfil, texto, timestamp: new Date()
+            });
+        }
+        
         res.json(atualizado);
     } catch (error) {
         res.status(500).json({ erro: "Erro ao adicionar mensagem" });
@@ -468,24 +486,15 @@ async function iniciar() {
         try {
             await conectarMongo();
             console.log("Conectado ao MongoDB");
-            
-            // Seed default official user if not exists
-            const adminEmail = "admin@sigacrc.com.br";
-            if (!(await usuariosDb.existeUsuario(adminEmail, "00000000000"))) {
-                await usuariosDb.criarUsuario({
-                    nome: "Oficial",
-                    email: adminEmail,
-                    cpf: "00000000000",
-                    senha: "admin",
-                    perfil: "oficial"
-                });
-                console.log("Usuário oficial padrão criado (admin@sigacrc.com.br / admin).");
-            }
         } catch (dbError) {
             console.warn("Aviso: Falha ao conectar ao MongoDB. O servidor vai iniciar, mas as funções que dependem do banco darão erro.");
         }
         
-        app.listen(PORT, () => {
+        const server = http.createServer(app);
+        const io = setupSocket(server);
+        app.set("io", io);
+
+        server.listen(PORT, () => {
             console.log(`SIGACRC rodando em http://localhost:${PORT}`);
         });
     } catch (error) {

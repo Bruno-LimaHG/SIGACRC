@@ -202,7 +202,7 @@ form.addEventListener("submit", async (event) => {
     const cliente = SIGACRC.clienteLogado();
 
     try {
-        const tokenHeader = { 'Authorization': `Bearer ${SIGACRC.obterClienteLogado() ? SIGACRC.obterClienteLogado().token : ''}` };
+        const tokenHeader = { 'Authorization': `Bearer ${SIGACRC.clienteLogado() ? SIGACRC.clienteLogado().token : ''}` };
         
         const method = protocoloEdicao ? 'PUT' : 'POST';
         const url = protocoloEdicao ? `/api/pedidos/${protocoloEdicao}` : '/api/pedidos';
@@ -727,7 +727,8 @@ function configurarAnexosDocumentos() {
             }
         });
 
-        btnVer.addEventListener("click", () => {
+        btnVer.addEventListener("click", async (e) => {
+            e.preventDefault();
             const arquivoSalvo = dadosFormulario[inputArquivo.name];
 
             if (!arquivoSalvo || !arquivoSalvo.url) {
@@ -735,7 +736,19 @@ function configurarAnexosDocumentos() {
                 return;
             }
 
-            window.open(arquivoSalvo.url, "_blank");
+            if (arquivoSalvo.url.startsWith("http")) {
+                try {
+                    const response = await fetch(`/api/documentos/download?url=${encodeURIComponent(arquivoSalvo.url)}`);
+                    if (!response.ok) throw new Error("Falha ao obter link de acesso.");
+                    const data = await response.json();
+                    window.open(data.url, "_blank");
+                } catch (error) {
+                    console.error("Erro ao abrir documento S3:", error);
+                    exibirMensagemFormulario("Erro ao acessar o documento. O servidor pode estar indisponível.", "erro");
+                }
+            } else {
+                window.open(arquivoSalvo.url, "_blank");
+            }
         });
 
         btnRemover.addEventListener("click", () => {
@@ -909,7 +922,7 @@ async function inicializarFormulario() {
 
     if (editar) {
         try {
-            const resposta = await fetch(`/api/pedidos/${editar}`);
+            const resposta = await fetch(`/api/pedidos/${editar}?t=` + new Date().getTime());
             if (resposta.ok) {
                 const p = await resposta.json();
                 if (p) {
@@ -925,6 +938,19 @@ async function inicializarFormulario() {
                             nome_contraente2: p.conjuge,
                         };
                     }
+                    
+                    // Reconstroi os documentos anexos no formato que o frontend precisa
+                    if (p.documentosAnexos && p.documentosAnexos.length > 0) {
+                        p.documentosAnexos.forEach(doc => {
+                            dadosFormulario[doc.id] = {
+                                nome: doc.nome,
+                                tipo: doc.tipo,
+                                url: doc.dados, // Pode ser usado para "ver arquivo"
+                                dados: doc.dados // Mantém para ser reenviado ao servidor
+                            };
+                        });
+                    }
+
                     protocoloEdicao = p.id;
                 }
             }
