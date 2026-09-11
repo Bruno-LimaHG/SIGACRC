@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGACRC - Dashboard de Estatísticas</title>
+    <link rel="stylesheet" href="/assets/css/sigacrc.css">
+    <style>
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 24px;
+            margin-top: 32px;
+            margin-bottom: 32px;
+        }
+        .dashboard-grid.editing .card {
+            border: 2px dashed #3b82f6;
+            cursor: grab;
+            opacity: 0.9;
+        }
+        .dashboard-grid.editing .card:active {
+            cursor: grabbing;
+        }
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+        .card {
+            padding: 24px;
+            background: var(--cor-superficie);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            position: relative;
+            transition: all 0.2s;
+        }
+        .card h3 {
+            margin-bottom: 16px;
+            font-size: 16px;
+            color: var(--cor-texto);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .btn-remover-grafico {
+            background: none;
+            border: none;
+            color: #ef4444;
+            cursor: pointer;
+            font-size: 18px;
+            display: none;
+        }
+        .dashboard-grid.editing .btn-remover-grafico {
+            display: block;
+        }
+        .oculto { display: none !important; }
+    </style>
+    <link rel="stylesheet" href="/components/a11y/a11y.css">
+</head>
+<body>
+    <header class="topbar">
+        <div class="layout topbar-conteudo">
+            <a class="marca" href="/painel-oficial">
+                <strong>SIGACRC</strong>
+                <span>Painel do Oficial</span>
+            </a>
+            <nav class="nav-acoes">
+                <a class="btn btn-secundario" href="/">Início</a>
+                <a class="btn btn-secundario" href="/painel-oficial">Voltar ao Painel</a>
+                <button type="button" id="btnSairOficial" class="btn-escuro">Sair</button>
+                <span class="versao" style="background: white; border: 1px solid #e5e7eb; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-family: monospace; color: #6b7280; display: flex; align-items: center; justify-content: center; height: 32px; margin-left: 8px;" title="Versão do Sistema">v2.1.0</span>
+            </nav>
+        </div>
+    </header>
+
+    <main class="layout dashboard">
+        <section class="dashboard-topo" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+            <div>
+                <span class="tag">Business Intelligence</span>
+                <h1>Dashboard de Monitoramento</h1>
+                <p>Acompanhe os indicadores chave do cartório em tempo real.</p>
+            </div>
+            <div class="form-acoes">
+                <button type="button" id="btnPersonalizar" class="btn-secundario">✏️ Personalizar Painel</button>
+                <button type="button" id="btnSalvarLayout" class="btn oculto">💾 Salvar Alterações</button>
+            </div>
+        </section>
+
+        <section id="dashboardGrid" class="dashboard-grid">
+            <!-- Gráficos gerados via JS -->
+        </section>
+        
+        <div id="estadoVazioDashboard" class="mensagem oculto" style="margin-top: 40px;">
+            Nenhum gráfico selecionado. Clique em "Personalizar Painel" para adicionar indicadores.
+        </div>
+    </main>
+
+    <section id="modalPersonalizar" class="modal oculto" aria-hidden="true">
+        <div class="modal-card">
+            <div class="modal-topo">
+                <div>
+                    <span class="tag">Layout</span>
+                    <h2>Gráficos Visíveis</h2>
+                </div>
+                <button type="button" id="btnFecharModalPersonalizar" class="btn-secundario">Fechar</button>
+            </div>
+            
+            <form id="formPersonalizar" class="form-grid">
+                <p style="grid-column: 1 / -1; margin-bottom: 16px;">Selecione quais gráficos você deseja exibir no seu painel:</p>
+                
+                <div class="campo campo-grande" style="display: flex; flex-direction: column; gap: 12px;">
+                    <label style="display: flex; align-items: center; gap: 8px;">
+                        <input type="checkbox" name="grafico_visivel" value="status"> Distribuição de Status (Rosca)
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px;">
+                        <input type="checkbox" name="grafico_visivel" value="regime"> Regime de Bens (Pizza)
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px;">
+                        <input type="checkbox" name="grafico_visivel" value="evolucao"> Evolução de Solicitações (Linha)
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px;">
+                        <input type="checkbox" name="grafico_visivel" value="dias"> Pedidos por Dia da Semana (Barras)
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px;">
+                        <input type="checkbox" name="grafico_visivel" value="atendimentos"> Status de Atendimentos (Doughnut)
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px;">
+                        <input type="checkbox" name="grafico_visivel" value="bairros"> Mapa de Bairros (Barras Horizontais)
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px;">
+                        <input type="checkbox" name="grafico_visivel" value="calendario"> Calendário Inteligente de Casamentos
+                    </label>
+                </div>
+
+                <div class="form-acoes campo-grande" style="margin-top: 16px;">
+                    <button type="submit">Aplicar e Fechar</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Leaflet para o mapa -->
+    <link rel="stylesheet" href="/assets/css/leaflet.css" />
+    <script src="/assets/js/leaflet/leaflet.js"></script>
+    <script src="/assets/js/leaflet/leaflet-heat.js"></script>
+
+    <script src="/assets/js/fullcalendar.js"></script>
+    <script src="/assets/js/chart.js"></script>
+    <script src="/assets/js/sortable.min.js"></script>
+    <script src="/assets/js/sigacrc-storage.js?v=5"></script>
+    <script src="/dashboard/dashboard.js"></script>
+
+    <!-- Início do Widget de Acessibilidade Personalizado -->
+<!-- a11y.html - Componente Global de Acessibilidade -->
+<div class="a11y-widget" id="a11yWidget">
+  <!-- Painel de Opções -->
+  <div 
+    class="a11y-panel" 
+    id="a11yPanel" 
+    role="menu" 
+    aria-label="Opções de Acessibilidade" 
+    hidden
+  >
+    <button class="a11y-btn" id="btnIncreaseFont" role="menuitem" tabindex="-1">
+      A+ (Aumentar Fonte)
+    </button>
+    <button class="a11y-btn" id="btnDecreaseFont" role="menuitem" tabindex="-1">
+      A- (Diminuir Fonte)
+    </button>
+    <button class="a11y-btn" id="btnHighContrast" role="menuitem" tabindex="-1" aria-pressed="false">
+      Alto Contraste
+    </button>
+    <button class="a11y-btn" id="btnHighlightLinks" role="menuitem" tabindex="-1" aria-pressed="false">
+      Destacar Links
+    </button>
+  </div>
+
+  <!-- Botão Principal Flutuante -->
+  <button 
+    class="a11y-main-btn" 
+    id="a11yMainBtn" 
+    aria-expanded="false" 
+    aria-controls="a11yPanel"
+    aria-label="Abrir menu de acessibilidade"
+  >
+    <!-- Ícone de Acessibilidade Universal (SVG) -->
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" fill="currentColor">
+      <path d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 7h-6v13h-2v-6h-2v6H9V9H3V7h18v2z"/>
+    </svg>
+  </button>
+</div>
+
+    <script src="/components/a11y/a11y.js"></script>
+    <!-- Fim do Widget de Acessibilidade Personalizado -->
+
+    <!-- Início do VLibras -->
+    <div vw class="enabled">
+      <div vw-access-button class="active"></div>
+      <div vw-plugin-wrapper>
+        <div class="vw-plugin-top-wrapper"></div>
+      </div>
+    </div>
+    <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+    <script>
+      new window.VLibras.Widget('https://vlibras.gov.br/app');
+    </script>
+    <!-- Fim do VLibras -->
+</body>
+</html>

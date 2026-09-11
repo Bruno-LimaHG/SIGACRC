@@ -46,10 +46,20 @@ const authLimiter = rateLimit({
 });
 
 const helmet = require('helmet');
-app.use(helmet());
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+            "img-src": ["'self'", "data:", "https://*.tile.openstreetmap.org", "https://tile.openstreetmap.org", "https://unpkg.com"]
+        }
+    }
+}));
 app.use(morgan('combined', { stream: { write: message => logger.info(message.trim()) } }));
 app.use(cors({ origin: "*" })); // Em produção na VM da AWS, trocar '*' pela URL do seu front-end
 app.use(express.json({ limit: "25mb" }));
+// Rotas que devem preceder arquivos estáticos para evitar conflitos
+app.get("/", (req, res) => res.sendFile(path.join(PUBLIC_DIR, "tela_inicial", "tela_inicial.html")));
+
 app.use(express.static(PUBLIC_DIR));
 
 // Rota para baixar/visualizar documentos com Pre-Signed URL
@@ -92,7 +102,6 @@ function formatarData(iso) {
 }
 
 // Rotas Limpas (Clean URLs)
-app.get("/", (req, res) => res.sendFile(path.join(PUBLIC_DIR, "tela_inicial", "tela_inicial.html")));
 app.get("/cadastro", (req, res) => res.sendFile(path.join(PUBLIC_DIR, "cadastro_clientes", "cadastro_clientes.html")));
 app.get("/login", (req, res) => res.sendFile(path.join(PUBLIC_DIR, "login_clientes", "login_clientes.html")));
 app.get("/login-funcionarios", (req, res) => res.sendFile(path.join(PUBLIC_DIR, "login_escreventes", "login_escreventes.html")));
@@ -100,6 +109,7 @@ app.get("/login-oficial", (req, res) => res.sendFile(path.join(PUBLIC_DIR, "logi
 app.get("/painel", (req, res) => res.sendFile(path.join(PUBLIC_DIR, "painel", "painel.html")));
 app.get("/painel-funcionario", (req, res) => res.sendFile(path.join(PUBLIC_DIR, "painel_escrevente", "painel_escrevente.html")));
 app.get("/painel-oficial", (req, res) => res.sendFile(path.join(PUBLIC_DIR, "painel_oficial", "painel_oficial.html")));
+app.get("/dashboard", (req, res) => res.sendFile(path.join(PUBLIC_DIR, "dashboard", "dashboard.html")));
 app.get("/area-cliente", (req, res) => res.sendFile(path.join(PUBLIC_DIR, "area_cliente", "area_cliente.html")));
 app.get("/formulario", (req, res) => res.sendFile(path.join(PUBLIC_DIR, "formulario_casamento", "formulario_casamento.html")));
 app.get("/acompanhamento", (req, res) => res.sendFile(path.join(PUBLIC_DIR, "acompanhamento", "acompanhamento.html")));

@@ -1,0 +1,219 @@
+/* a11y.css - Estilos do Componente Global de Acessibilidade */
+
+:root {
+  /* Variáveis de cores padrão */
+  --bg-color-normal: #ffffff;
+  --text-color-normal: #333333;
+  --link-color-normal: #0056b3;
+  
+  /* Variáveis de cores para Alto Contraste */
+  --bg-color-contrast: #000000;
+  --text-color-contrast: #ffffff;
+  --link-color-contrast: #ffff00;
+  --focus-outline-contrast: #ffff00;
+  
+  /* Variáveis específicas do Widget */
+  --a11y-primary-color: #0056b3;
+  --a11y-primary-hover: #004494;
+  --a11y-panel-bg: #ffffff;
+  --a11y-panel-border: #cccccc;
+  --a11y-text-color: #333333;
+  
+  /* Controle do tamanho base da fonte (16px padrão) */
+  --font-size-base: 16px;
+}
+
+/* 
+  O body utilizará as variáveis que podem ser dinamicamente 
+  alteradas via JS ou pelas classes de acessibilidade.
+*/
+body {
+  font-size: var(--font-size-base);
+  /* Transição suave para mudança de cores e tamanho da fonte */
+  transition: background-color 0.3s, color 0.3s, font-size 0.3s;
+}
+
+/* =========================================
+   1. ESTILOS DE ALTO CONTRASTE
+   ========================================= */
+body.high-contrast {
+  background-color: var(--bg-color-contrast) !important;
+  color: var(--text-color-contrast) !important;
+}
+
+/* Força a cor de texto e borda na maioria dos elementos quando em alto contraste */
+body.high-contrast * {
+  color: var(--text-color-contrast) !important;
+  border-color: var(--text-color-contrast) !important;
+  background-color: transparent !important;
+}
+
+/* Garante que o texto selecionado/destacado pelo usuário fique visível */
+body.high-contrast *::selection {
+  background-color: var(--focus-outline-contrast) !important;
+  color: var(--bg-color-contrast) !important;
+}
+body.high-contrast *::-moz-selection {
+  background-color: var(--focus-outline-contrast) !important;
+  color: var(--bg-color-contrast) !important;
+}
+
+/* Mantém o destaque de textos com tag <mark> ou similares no alto contraste */
+body.high-contrast mark,
+body.high-contrast .highlight {
+  background-color: var(--focus-outline-contrast) !important;
+  color: var(--bg-color-contrast) !important;
+}
+
+/* Destaca os links no modo de alto contraste para que não se percam no texto comum */
+body.high-contrast a,
+body.high-contrast a * {
+  color: var(--link-color-contrast) !important;
+  text-decoration: underline !important;
+}
+
+/* Destaca elementos em foco no modo de alto contraste */
+body.high-contrast a:focus,
+body.high-contrast button:focus,
+body.high-contrast input:focus,
+body.high-contrast select:focus,
+body.high-contrast textarea:focus,
+body.high-contrast [tabindex]:focus {
+  outline: 3px solid var(--focus-outline-contrast) !important;
+  outline-offset: 2px !important;
+}
+
+/* Ajustes específicos do widget para alto contraste */
+body.high-contrast .a11y-panel {
+  background-color: #222 !important;
+  border: 1px solid var(--text-color-contrast) !important;
+}
+
+body.high-contrast .a11y-widget button {
+  background-color: #000 !important;
+  color: var(--text-color-contrast) !important;
+  border: 1px solid var(--text-color-contrast) !important;
+}
+
+body.high-contrast .a11y-widget button:hover,
+body.high-contrast .a11y-widget button:focus {
+  background-color: #333 !important;
+  outline: 3px solid var(--focus-outline-contrast) !important;
+}
+
+body.high-contrast .a11y-main-btn {
+  background-color: #000 !important;
+  border: 2px solid var(--text-color-contrast) !important;
+}
+
+/* =========================================
+   2. ESTILOS DE DESTAQUE DE LINKS
+   ========================================= */
+body.highlight-links a, 
+body.highlight-links button {
+  text-decoration: underline !important;
+  text-decoration-thickness: 3px !important;
+  background-color: yellow !important;
+  color: black !important;
+}
+
+body.highlight-links .a11y-widget button {
+  /* Impede que o próprio widget fique ilegível na hora de destacar */
+  text-decoration: none !important;
+}
+
+/* =========================================
+   3. ESTILOS DO WIDGET FLUTUANTE
+   ========================================= */
+.a11y-widget {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999; /* Garante que ficará acima de modais e outros elementos */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-family: Arial, sans-serif;
+}
+
+/* Painel de Opções */
+.a11y-panel {
+  background-color: var(--a11y-panel-bg);
+  border: 1px solid var(--a11y-panel-border);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  
+  /* Animação de visibilidade */
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.a11y-panel:not([hidden]) {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Botões do Painel */
+.a11y-btn {
+  background-color: transparent;
+  border: 1px solid var(--a11y-panel-border);
+  border-radius: 4px;
+  padding: 10px 16px;
+  font-size: 14px;
+  color: var(--a11y-text-color);
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.2s, box-shadow 0.2s;
+  min-width: 200px;
+}
+
+.a11y-btn:hover {
+  background-color: #f0f0f0;
+}
+
+.a11y-btn:focus-visible {
+  outline: 2px solid var(--a11y-primary-color);
+  outline-offset: 2px;
+}
+
+/* Estilo ativo (quando a opção está ativada) */
+.a11y-btn[aria-pressed="true"] {
+  background-color: #e6f2ff;
+  font-weight: bold;
+  border-color: var(--a11y-primary-color);
+  color: var(--a11y-primary-color);
+}
+
+/* Botão Principal */
+.a11y-main-btn {
+  background-color: var(--a11y-primary-color);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.a11y-main-btn:hover {
+  background-color: var(--a11y-primary-hover);
+  transform: scale(1.05);
+}
+
+.a11y-main-btn:focus-visible {
+  outline: 3px solid var(--a11y-primary-color);
+  outline-offset: 3px;
+}

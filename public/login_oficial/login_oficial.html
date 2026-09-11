@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIGACRC - Login do Oficial</title>
     <link rel="stylesheet" href="/assets/css/sigacrc.css">
+    <link rel="stylesheet" href="/components/a11y/a11y.css">
 </head>
 <body>
     <main class="auth-page">
@@ -44,5 +45,61 @@
 
     <script src="/assets/js/sigacrc-storage.js?v=5"></script>
     <script src="/login_oficial/login_oficial.js?v=2"></script>
+
+    <!-- Início do Widget de Acessibilidade Personalizado -->
+<!-- a11y.html - Componente Global de Acessibilidade -->
+<div class="a11y-widget" id="a11yWidget">
+  <!-- Painel de Opções -->
+  <div 
+    class="a11y-panel" 
+    id="a11yPanel" 
+    role="menu" 
+    aria-label="Opções de Acessibilidade" 
+    hidden
+  >
+    <button class="a11y-btn" id="btnIncreaseFont" role="menuitem" tabindex="-1">
+      A+ (Aumentar Fonte)
+    </button>
+    <button class="a11y-btn" id="btnDecreaseFont" role="menuitem" tabindex="-1">
+      A- (Diminuir Fonte)
+    </button>
+    <button class="a11y-btn" id="btnHighContrast" role="menuitem" tabindex="-1" aria-pressed="false">
+      Alto Contraste
+    </button>
+    <button class="a11y-btn" id="btnHighlightLinks" role="menuitem" tabindex="-1" aria-pressed="false">
+      Destacar Links
+    </button>
+  </div>
+
+  <!-- Botão Principal Flutuante -->
+  <button 
+    class="a11y-main-btn" 
+    id="a11yMainBtn" 
+    aria-expanded="false" 
+    aria-controls="a11yPanel"
+    aria-label="Abrir menu de acessibilidade"
+  >
+    <!-- Ícone de Acessibilidade Universal (SVG) -->
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" fill="currentColor">
+      <path d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 7h-6v13h-2v-6h-2v6H9V9H3V7h18v2z"/>
+    </svg>
+  </button>
+</div>
+
+    <script src="/components/a11y/a11y.js"></script>
+    <!-- Fim do Widget de Acessibilidade Personalizado -->
+
+    <!-- Início do VLibras -->
+    <div vw class="enabled">
+      <div vw-access-button class="active"></div>
+      <div vw-plugin-wrapper>
+        <div class="vw-plugin-top-wrapper"></div>
+      </div>
+    </div>
+    <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+    <script>
+      new window.VLibras.Widget('https://vlibras.gov.br/app');
+    </script>
+    <!-- Fim do VLibras -->
 </body>
 </html>

@@ -1,0 +1,11 @@
+User-agent: *
+Disallow: /painel/
+Disallow: /painel_oficial/
+Disallow: /painel_escrevente/
+Disallow: /dashboard/
+Disallow: /login_oficial/
+Disallow: /login_escreventes/
+Disallow: /login_token/
+Disallow: /protocolo/
+
+Sitemap: https://sigacrc.com.br/sitemap.xml

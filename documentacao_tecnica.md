@@ -17,6 +17,8 @@ O **SIGACRC** é uma plataforma concebida para a modernização e digitalizaçã
 - **Frontend:** Vanilla JavaScript (ES6+), HTML5 Semântico e CSS3 com propriedades customizadas (suporte completo a temas claro e escuro). Não utiliza dependências ou frameworks de UI pesados (como React ou Bootstrap), assegurando leveza, alta performance e baixa latência de renderização.
 - **Backend:** Node.js em conjunto com o framework **Express.js**, modularizado para fácil extensão e teste.
 - **Banco de Dados:** **MongoDB** manipulado pela biblioteca **Mongoose**, que garante tipagem e validação estrita nos schemas.
+- **Filas e Cache:** **Redis** em memória servindo como base de alta performance para mensageria e filas de processamento estruturadas pelo **BullMQ**.
+- **Comunicação em Tempo Real:** **WebSocket** implementado através da biblioteca **Socket.io** com adaptador Redis para prover escalabilidade em clusters.
 - **Armazenamento Seguro (AWS S3):** Integração com o bucket S3 via `@aws-sdk/client-s3`. Os documentos são mantidos em bucket privado, e a leitura é liberada por meio de **Pre-Signed URLs** temporárias emitidas com verificação de autorização no backend.
 - **Autenticação & Autorização:** Uso da biblioteca `jsonwebtoken` para emissão de tokens **JWT** assinalados no login e validados em cada requisição protegida via cabeçalho `Authorization: Bearer <token>`.
 - **Segurança da Aplicação:** Proteção de cabeçalhos HTTP com **Helmet** e mitigação contra ataques de força bruta ou negação de serviço via `express-rate-limit`.
@@ -27,29 +29,38 @@ O **SIGACRC** é uma plataforma concebida para a modernização e digitalizaçã
 
 ## 3. Arquitetura da Solução
 
-O projeto segue a arquitetura Cliente-Servidor orientada a **API RESTful**. O Frontend se comunica com o Backend por meio de endpoints `/api/`, enviando tokens JWT autenticados.
+O projeto segue a arquitetura Cliente-Servidor orientada a **API RESTful** em conjunto com comunicação em tempo real via **WebSocket**. O processamento de tarefas pesadas é delegado a *Background Workers*.
 
 ```mermaid
 graph TD
     Client["Navegador do Cliente / Requerente (Frontend)"]
     Admin["Navegador do Oficial / Escrevente (Frontend)"]
     
-    subgraph "Camada de Servidor (Node.js / Express)"
-        API["Backend API REST"]
-        Auth["Middleware JWT / Rate Limiter / Helmet"]
-        Logger["Winston & Morgan (Logger)"]
+    subgraph "Camada de Servidor (Node.js)"
+        API["Backend API REST / Express"]
+        WS["Servidor WebSocket (Socket.io)"]
+        Auth["Middleware JWT / Seguranca"]
+        Workers["Background Workers (BullMQ)"]
     end
     
     DB[("MongoDB (Mongoose)")]
-    S3["AWS S3 Bucket (Pre-Signed URLs)"]
+    Redis[("Redis (Filas & Adapter)")]
+    S3["AWS S3 Bucket"]
     
-    Client -- "HTTP REST (Authorization: Bearer JWT)" --> Auth
-    Admin -- "HTTP REST (Authorization: Bearer JWT)" --> Auth
+    Client -- "HTTP REST (JWT)" --> Auth
+    Admin -- "HTTP REST (JWT)" --> Auth
+    Client -- "WebSocket (Chat)" --> WS
+    Admin -- "WebSocket (Chat)" --> WS
+    
     Auth --> API
-    API --> Logger
+    API --> DB
     
-    API -- "Mongoose Schemas" --> DB
-    API -- "AWS SDK v3 (Get/Put Object)" --> S3
+    API -- "Publica Jobs" --> Redis
+    WS -- "Adapter de Escala" --> Redis
+    Redis -- "Consome Jobs" --> Workers
+    
+    Workers -- "Upload de Anexos" --> S3
+    Workers -- "Notificações" --> API
 ```
 
 ---
@@ -79,26 +90,35 @@ O código é estritamente segregado entre arquivos estáticos de interface web e
 
 ## 5. Fluxos Principais (Diagramas)
 
-### A. Fluxo de Preenchimento de Pedido e Upload Seguro de Anexos
+### A. Fluxo de Preenchimento de Pedido e Upload Assíncrono
+
+Para evitar travamento do servidor e timeout do lado do cliente com envio de arquivos pesados, o upload para a AWS S3 foi deslocado para o BullMQ de forma assíncrona.
 
 ```mermaid
 sequenceDiagram
     actor Cliente as "Requerente (Cliente)"
     participant JS as "Frontend (formulario.js)"
     participant API as "Backend API (/api/pedidos)"
+    participant Redis as "Redis / BullMQ"
+    participant Worker as "s3Worker / emailWorker"
     participant S3 as "AWS S3"
     participant DB as "MongoDB"
 
-    Cliente->>JS: Preenche as 8 etapas do casamento e seleciona arquivos civis
-    JS->>API: POST /api/pedidos (com cabeçalho Authorization: Bearer JWT)
+    Cliente->>JS: Preenche etapas e anexa arquivos
+    JS->>API: POST /api/pedidos (Dados + base64)
     activate API
-    API->>S3: Faz upload dos arquivos anexados (Base64/Buffer) via SDK v3
-    S3-->>API: Retorna referências de objeto S3
-    API->>DB: Cria e persiste documento completo do Pedido (Status: Pendente)
-    DB-->>API: Retorna número de Protocolo gerado
-    API-->>JS: Resposta HTTP 201 (Sucesso) e Protocolo
+    API->>DB: Cria Pedido (Status Documentos: processando)
+    API->>Redis: Publica Job na fila s3Queue e emailQueue
+    API-->>JS: Resposta HTTP 201 (Sucesso imediato)
     deactivate API
-    JS->>Cliente: Redireciona para visualização do Protocolo gerado
+    JS->>Cliente: Redireciona para visualização do Protocolo
+    
+    Note over Redis,S3: Processamento Assíncrono em Background
+    Redis-->>Worker: Envia Job para o Worker disponível
+    Worker->>S3: Upload dos arquivos base64 via SDK v3
+    S3-->>Worker: Retorna URL final
+    Worker->>DB: Atualiza Pedido com a URL do S3
+    Worker->>Cliente: Envia E-mail de confirmação (SMTP)
 ```
 
 ### B. Avaliação Processual e Exigência Documental
@@ -138,26 +158,24 @@ sequenceDiagram
     deactivate API
 ```
 
-### D. Sistema de Atendimentos (Chat Assíncrono do Processo)
+### D. Sistema de Atendimentos (Chat em Tempo Real)
 
-O cartório dispõe de um canal assíncrono por chamados ("Atendimentos"), reduzindo a necessidade de atendimento presencial ou telefônico.
+O cartório dispõe de um canal por chamados ("Atendimentos") que opera em tempo real utilizando WebSockets, eliminando long-polling e melhorando a experiência de comunicação entre o cliente e o escrevente.
 
 ```mermaid
 sequenceDiagram
     actor Cliente
     actor Escrevente
+    participant WS as Socket.io Server
     participant DB as MongoDB
 
-    Cliente->>DB: POST /api/atendimentos (Abertura de Chamado com JWT)
-    Note over DB: Status inicial: "Aberto"
+    Cliente->>WS: Emit 'entrar_atendimento' (ID Sala)
+    Escrevente->>WS: Emit 'entrar_atendimento' (ID Sala)
     
-    Escrevente->>DB: GET /api/atendimentos (Consulta tickets abertos via JWT)
-    Escrevente->>DB: PATCH /api/atendimentos/:id (Registra resposta do Cartório)
-    Note over DB: Status atualizado: "Respondido"
-    
-    Cliente->>DB: GET /api/atendimentos (Recebe e lê a resposta)
-    Cliente->>DB: PATCH /api/atendimentos/:id (Envia réplica ou esclarecimento)
-    Note over DB: Status atualizado: "Aberto"
+    Cliente->>WS: Emit 'enviar_mensagem' (Dados e Texto)
+    WS->>DB: Persiste mensagem no banco
+    WS-->>Cliente: Broadcast 'nova_mensagem'
+    WS-->>Escrevente: Broadcast 'nova_mensagem'
 ```
 
 ---
@@ -172,6 +190,12 @@ Toda a comunicação autêntica foi modernizada para eliminar fallbacks inseguro
 ### Segurança de Arquivos e URLs Pré-Assinadas (AWS S3)
 Os anexos documentais exigem sigilo. O serviço `services/s3Service.js` interage através de `@aws-sdk/client-s3`.  
 Em vez de disponibilizar arquivos de forma pública no S3, o backend expõe o endpoint `/api/documentos/download`. O escrevente ou titular solicita o download informando a referência, o servidor valida sua autorização JWT e gera uma **Pre-Signed URL** (URL Pré-Assinada) válida por tempo limitado, impedindo raspagem de documentos civis.
+
+### Processamento Assíncrono com BullMQ e Redis
+Para operações demoradas (como envio de e-mails automáticos via SMTP e upload de base64 pesados para a AWS S3), o servidor não mantém a conexão HTTP aguardando a finalização. Em vez disso, essas tarefas são imediatamente adicionadas a filas no **Redis** através do **BullMQ**. Serviços independentes (workers) consomem essas filas em background, reportando sucesso ou erro autonomamente sem impactar o tempo de resposta da API principal.
+
+### Comunicação em Tempo Real com WebSocket
+A interação direta entre requerentes e escreventes ocorre por meio de canais **WebSocket** mantidos pelo `socket.io`. A persistência das conversas ocorre de forma síncrona com o MongoDB antes do *broadcast* nas "salas" virtuais, garantindo registro histórico. Além disso, a utilização do `@socket.io/redis-adapter` permite a escalabilidade horizontal para futuros cenários onde a aplicação rode em múltiplas instâncias na nuvem.
 
 ### Auditoria e Logging Estruturado (Winston + Morgan)
 Para observabilidade de produção, o módulo `/utils/logger.js` combina:
