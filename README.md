@@ -1,12 +1,14 @@
 # SIGACRC — Sistema Integrado de Gestão de Atendimento de Cartório de Registro Civil
 
-Sistema de gestão unificado de pedidos de casamento civil com **Frontend Web** (Vanilla JS/CSS/HTML5), **API REST Node.js/Express**, **Banco de Dados MongoDB**, **Armazenamento de Arquivos AWS S3 (URLs Pré-Assinadas)**, **Autenticação Segura JWT**, **Logging Estruturado (Winston/Morgan)**, **Testes Automatizados (Jest/Supertest)** e **Conformidade com a LGPD**.
+Sistema de gestão unificado de pedidos de casamento civil com **Frontend Web** (Vanilla JS/CSS/HTML5), **API REST Node.js/Express**, **Comunicação em Tempo Real (WebSocket/Socket.io)**, **Banco de Dados MongoDB**, **Filas Assíncronas (BullMQ/Redis)**, **Armazenamento de Arquivos AWS S3 (URLs Pré-Assinadas)**, **Autenticação Segura JWT**, **Logging Estruturado (Winston/Morgan)**, **Testes Automatizados (Jest/Supertest)** e **Conformidade com a LGPD**.
 
 ---
 
 ## Destaques de Arquitetura & Segurança
 
 - 🔒 **Autenticação via JWT (JSON Web Token)**: Autenticação stateless segura através do cabeçalho HTTP `Authorization: Bearer <token>`. Removidos todos os fallbacks legados inseguros (ex: cabeçalhos `x-user-id` simulados).
+- ⚡ **Processamento em Background (BullMQ & Redis)**: Delegação de tarefas pesadas (envio de e-mails, uploads S3 de arquivos pesados) para workers assíncronos, prevenindo travamento da API.
+- 💬 **Comunicação em Tempo Real (WebSocket)**: Chat integrado com `Socket.io` para suporte aos noivos e respostas imediatas do cartório, com capacidade de escalabilidade via Redis adapter.
 - 🛡️ **Segurança de Documentos S3 (Pre-Signed URLs)**: Anexos e certidões são protegidos na AWS S3 e acessados mediante URLs pré-assinadas geradas temporariamente pelo backend (`@aws-sdk/client-s3`), sem exposição pública dos buckets ou credenciais.
 - 📊 **Logging Estruturado & Auditoria**: Integração com **Winston** e **Morgan** (`utils/logger.js`) para rastreamento completo de requisições HTTP e capturas globais de erros no servidor.
 - 🚦 **Proteção contra Força Bruta & DDoS**: Limitação de taxa de requisições (`express-rate-limit`) e proteção de cabeçalhos HTTP com **Helmet**.
@@ -103,6 +105,10 @@ SIGACRC/
     painel_escrevente/ # Painel operacional do escrevente do cartório
     painel_oficial/    # Painel gerencial e administrativo do oficial
     protocolo/         # Visualização de comprovantes e status de protocolos
+  queues/              # Filas do BullMQ (E-mails, Uploads S3, Backups)
+  workers/             # Consumidores background do BullMQ
+  sockets/             # Manipuladores de eventos WebSocket (Socket.io)
+  config/              # Configurações de conexões externas (Redis, etc)
   services/            # Integrações externas (ex: s3Service.js com @aws-sdk/client-s3)
   utils/               # Utilitários globais de sistema (ex: logger.js com Winston/Morgan)
   scripts/             # Scripts administrativos (migrações de dados e backup.js)
@@ -143,6 +149,9 @@ Todas as rotas protegidas exigem o envio do token de autenticação no cabeçalh
 |----------|---------|-----------|
 | `PORT` | `3000` | Porta de execução do servidor Express |
 | `MONGODB_URI` | `mongodb://127.0.0.1:27017/sigacrc` | String de conexão com o MongoDB |
+| `REDIS_HOST` | `localhost` | Endereço do servidor Redis (para as filas BullMQ) |
+| `REDIS_PORT` | `6379` | Porta de acesso do Redis |
+| `REDIS_PASSWORD`| `senha-opcional` | Senha de autenticação do Redis |
 | `JWT_SECRET` | `chave-secreta-forte-e-segura` | Segredo de assinatura de tokens JWT para sessões |
 | `AWS_ACCESS_KEY_ID` | `AKIA...` | Credenciais IAM da AWS (para acesso S3) |
 | `AWS_SECRET_ACCESS_KEY`| `...` | Credenciais IAM da AWS |
