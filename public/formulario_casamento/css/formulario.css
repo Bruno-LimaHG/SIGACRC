@@ -25,17 +25,17 @@
 /* Define as cores da versão de alto contraste */
 body.alto-contraste {
     --fundo: #000000;
-    --card: #111111;
+    --card: #121212;
     --texto: #ffffff;
     --texto-suave: #ffffff;
-    --principal: #b7ff4a;
-    --principal-hover: #9ee63a;
-    --borda: #ffffff;
+    --principal: #ffff00;
+    --principal-hover: #e6e600;
+    --borda: #ffff00;
     --campo: #000000;
-    --aviso: #1f1f1f;
+    --aviso: #121212;
     --sombra: rgba(255, 255, 255, 0.18);
-    --botao-anexo-bg: #b7ff4a;
-    --botao-anexo-hover: #9ee63a;
+    --botao-anexo-bg: #ffff00;
+    --botao-anexo-hover: #e6e600;
     --botao-anexo-texto: #000000;
 }
 
@@ -635,7 +635,7 @@ body.alto-contraste .btn-remover-arquivo {
 }
 
 body.alto-contraste .mensagem-cep-sucesso {
-    color: #b7ff4a;
+    color: #ffff00;
 }
 
 body.alto-contraste .mensagem-cep-erro {
@@ -684,7 +684,7 @@ body.alto-contraste .mensagem-cep-erro {
 }
 
 body.alto-contraste .mensagem-formulario.sucesso {
-    color: #b7ff4a;
+    color: #ffff00;
 }
 
 body.alto-contraste .mensagem-formulario.erro {

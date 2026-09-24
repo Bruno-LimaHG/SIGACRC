@@ -36,38 +36,189 @@ body {
 /* =========================================
    1. ESTILOS DE ALTO CONTRASTE
    ========================================= */
-body.high-contrast {
-  background-color: var(--bg-color-contrast) !important;
-  color: var(--text-color-contrast) !important;
+body.high-contrast, 
+body.alto-contraste {
+  background: #000000 !important;
+  background-image: none !important;
+  color: #ffffff !important;
+  
+  /* Sobrescrita de variáveis globais do sigacrc.css e formulario.css */
+  --fundo: #000000 !important;
+  --fundo-2: #121212 !important;
+  --card: #121212 !important;
+  --card-2: #1a1a1a !important;
+  --texto: #ffffff !important;
+  --texto-suave: #ffffff !important;
+  --principal: #ffff00 !important;
+  --principal-hover: #e6e600 !important;
+  --azul: #ffffff !important;
+  --azul-claro: #ffff00 !important;
+  --borda: #ffff00 !important;
+  --campo: #000000 !important;
+  --sucesso: #ffff00 !important;
+  --erro: #ff8080 !important;
+  --aviso: #121212 !important;
+  --botao-anexo-bg: #ffff00 !important;
+  --botao-anexo-hover: #e6e600 !important;
+  --botao-anexo-texto: #000000 !important;
 }
 
-/* Força a cor de texto e borda na maioria dos elementos quando em alto contraste */
-body.high-contrast * {
-  color: var(--text-color-contrast) !important;
-  border-color: var(--text-color-contrast) !important;
-  background-color: transparent !important;
+/* Força a cor de texto e borda universalmente no modo alto contraste */
+body.high-contrast *,
+body.alto-contraste * {
+  color: #ffffff !important;
+  border-color: #ffff00 !important;
+}
+
+/* Força fundos de botoes, modais, headers e cards para fundo preto com borda amarela, removendo imagens de fundo */
+body.high-contrast .card,
+body.high-contrast .auth-card,
+body.high-contrast .modal-card,
+body.high-contrast .tabela-wrap,
+body.high-contrast .metrica,
+body.high-contrast .item-lista,
+body.high-contrast .campo,
+body.high-contrast .hero-card,
+body.high-contrast .hero-visual,
+body.high-contrast header,
+body.high-contrast .topbar,
+body.high-contrast section,
+body.high-contrast .secao-destaque,
+body.high-contrast .aviso,
+body.high-contrast .box-condicional,
+body.high-contrast .resumo,
+body.high-contrast .detalhe,
+body.high-contrast .chat-historico,
+body.high-contrast .chat-mensagem,
+body.high-contrast .painel-card,
+body.high-contrast .card-verde,
+body.high-contrast .auth-image,
+body.high-contrast .sidebar,
+body.high-contrast .sidebar li,
+body.high-contrast .kpi-card,
+body.high-contrast .doc-item,
+body.high-contrast .filtro-box,
+body.high-contrast .modal-conteudo,
+body.high-contrast table,
+body.high-contrast thead,
+body.high-contrast tbody tr,
+body.high-contrast th,
+body.high-contrast td,
+body.high-contrast .visualizador-container,
+body.high-contrast .pagina-pdf,
+body.high-contrast .versao,
+body.high-contrast input,
+body.high-contrast select,
+body.high-contrast textarea,
+body.alto-contraste .card,
+body.alto-contraste .auth-card,
+body.alto-contraste .modal-card,
+body.alto-contraste .tabela-wrap,
+body.alto-contraste .metrica,
+body.alto-contraste .item-lista,
+body.alto-contraste .campo,
+body.alto-contraste .hero-card,
+body.alto-contraste .hero-visual,
+body.alto-contraste header,
+body.alto-contraste .topbar,
+body.alto-contraste section,
+body.alto-contraste .secao-destaque,
+body.alto-contraste .aviso,
+body.alto-contraste .box-condicional,
+body.alto-contraste .resumo,
+body.alto-contraste .detalhe,
+body.alto-contraste .chat-historico,
+body.alto-contraste .chat-mensagem,
+body.alto-contraste .painel-card,
+body.alto-contraste .card-verde,
+body.alto-contraste .auth-image,
+body.alto-contraste .sidebar,
+body.alto-contraste .sidebar li,
+body.alto-contraste .kpi-card,
+body.alto-contraste .doc-item,
+body.alto-contraste .filtro-box,
+body.alto-contraste .modal-conteudo,
+body.alto-contraste table,
+body.alto-contraste thead,
+body.alto-contraste tbody tr,
+body.alto-contraste th,
+body.alto-contraste td,
+body.alto-contraste .visualizador-container,
+body.alto-contraste .pagina-pdf,
+body.alto-contraste .versao,
+body.alto-contraste input,
+body.alto-contraste select,
+body.alto-contraste textarea {
+  background: #121212 !important;
+  background-image: none !important;
+  border: 1px solid #ffff00 !important;
+}
+
+/* Força textos para branco puro */
+body.high-contrast h1, body.high-contrast h2, body.high-contrast h3, body.high-contrast h4, body.high-contrast h5, body.high-contrast h6, body.high-contrast p, body.high-contrast span, body.high-contrast label, body.high-contrast li, body.high-contrast td, body.high-contrast th, body.high-contrast strong, body.high-contrast small,
+body.alto-contraste h1, body.alto-contraste h2, body.alto-contraste h3, body.alto-contraste h4, body.alto-contraste h5, body.alto-contraste h6, body.alto-contraste p, body.alto-contraste span, body.alto-contraste label, body.alto-contraste li, body.alto-contraste td, body.alto-contraste th, body.alto-contraste strong, body.alto-contraste small {
+  color: #ffffff !important;
+}
+
+/* Botões, tags e destaques (Fundo preto, texto e borda amarelos) */
+body.high-contrast button,
+body.high-contrast .btn,
+body.high-contrast .btn-destaque,
+body.high-contrast .btn-secundario,
+body.high-contrast .btn-escuro,
+body.high-contrast .btnMetodoLogin,
+body.high-contrast .tag,
+body.high-contrast .status,
+body.high-contrast [class*="status-"],
+body.high-contrast .badge-contador,
+body.high-contrast .nav-acoes a,
+body.high-contrast .aprovar,
+body.high-contrast .rejeitar,
+body.alto-contraste button,
+body.alto-contraste .btn,
+body.alto-contraste .btn-destaque,
+body.alto-contraste .btn-secundario,
+body.alto-contraste .btn-escuro,
+body.alto-contraste .btnMetodoLogin,
+body.alto-contraste .tag,
+body.alto-contraste .status,
+body.alto-contraste [class*="status-"],
+body.alto-contraste .badge-contador,
+body.alto-contraste .nav-acoes a,
+body.alto-contraste .aprovar,
+body.alto-contraste .rejeitar {
+  background: #000000 !important;
+  background-image: none !important;
+  color: #ffff00 !important;
+  border: 1px solid #ffff00 !important;
 }
 
 /* Garante que o texto selecionado/destacado pelo usuário fique visível */
-body.high-contrast *::selection {
+body.high-contrast *::selection,
+body.alto-contraste *::selection {
   background-color: var(--focus-outline-contrast) !important;
   color: var(--bg-color-contrast) !important;
 }
-body.high-contrast *::-moz-selection {
+body.high-contrast *::-moz-selection,
+body.alto-contraste *::-moz-selection {
   background-color: var(--focus-outline-contrast) !important;
   color: var(--bg-color-contrast) !important;
 }
 
 /* Mantém o destaque de textos com tag <mark> ou similares no alto contraste */
 body.high-contrast mark,
-body.high-contrast .highlight {
+body.high-contrast .highlight,
+body.alto-contraste mark,
+body.alto-contraste .highlight {
   background-color: var(--focus-outline-contrast) !important;
   color: var(--bg-color-contrast) !important;
 }
 
 /* Destaca os links no modo de alto contraste para que não se percam no texto comum */
 body.high-contrast a,
-body.high-contrast a * {
+body.high-contrast a *,
+body.alto-contraste a,
+body.alto-contraste a * {
   color: var(--link-color-contrast) !important;
   text-decoration: underline !important;
 }
@@ -78,30 +229,41 @@ body.high-contrast button:focus,
 body.high-contrast input:focus,
 body.high-contrast select:focus,
 body.high-contrast textarea:focus,
-body.high-contrast [tabindex]:focus {
+body.high-contrast [tabindex]:focus,
+body.alto-contraste a:focus,
+body.alto-contraste button:focus,
+body.alto-contraste input:focus,
+body.alto-contraste select:focus,
+body.alto-contraste textarea:focus,
+body.alto-contraste [tabindex]:focus {
   outline: 3px solid var(--focus-outline-contrast) !important;
   outline-offset: 2px !important;
 }
 
 /* Ajustes específicos do widget para alto contraste */
-body.high-contrast .a11y-panel {
-  background-color: #222 !important;
+body.high-contrast .a11y-panel,
+body.alto-contraste .a11y-panel {
+  background-color: #121212 !important;
   border: 1px solid var(--text-color-contrast) !important;
 }
 
-body.high-contrast .a11y-widget button {
+body.high-contrast .a11y-widget button,
+body.alto-contraste .a11y-widget button {
   background-color: #000 !important;
   color: var(--text-color-contrast) !important;
   border: 1px solid var(--text-color-contrast) !important;
 }
 
 body.high-contrast .a11y-widget button:hover,
-body.high-contrast .a11y-widget button:focus {
+body.high-contrast .a11y-widget button:focus,
+body.alto-contraste .a11y-widget button:hover,
+body.alto-contraste .a11y-widget button:focus {
   background-color: #333 !important;
   outline: 3px solid var(--focus-outline-contrast) !important;
 }
 
-body.high-contrast .a11y-main-btn {
+body.high-contrast .a11y-main-btn,
+body.alto-contraste .a11y-main-btn {
   background-color: #000 !important;
   border: 2px solid var(--text-color-contrast) !important;
 }
